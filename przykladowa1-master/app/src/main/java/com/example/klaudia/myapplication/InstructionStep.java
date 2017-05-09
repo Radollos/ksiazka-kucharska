@@ -10,13 +10,29 @@ public class InstructionStep {
     private int number;
     private String step;
     private ArrayList<Ingredient> ingredients;
-//    private
+    private ArrayList<Equipment> equipment;
 
 
-    public InstructionStep(int number, String step, ArrayList<Ingredient> ingredients){
+    public InstructionStep(int number, String step, ArrayList<Ingredient> ingredients, ArrayList<Equipment> equipment){
         this.number = number;
         this.step = step;
         this.ingredients = ingredients;
-//        this.
+        this.equipment = equipment;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getStep() {
+        return step;
+    }
+
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public ArrayList<Equipment> getEquipment() {
+        return equipment;
     }
 }
