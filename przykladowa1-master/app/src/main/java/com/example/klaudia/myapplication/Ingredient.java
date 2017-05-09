@@ -1,5 +1,7 @@
 package com.example.klaudia.myapplication;
 
+import java.util.ArrayList;
+
 /**
  * Created by Klaudia on 2017-04-09.
  */
@@ -18,9 +20,9 @@ public class Ingredient
     private double amount;
     private String unit;
     private String originalString;
-    private String[] metaInformation;
+    private ArrayList<String> metaInformation;
 
-    public Ingredient(int id, String aisle, String image, String name, double amount, String unit, String unitShort, String unitLong, String orginalString, String[] metaInformation)
+    public Ingredient(int id, String aisle, String image, String name, double amount, String unit, String unitShort, String unitLong, String originalString, ArrayList<String> metaInformation)
     {
         this.id = id;
         this.aisle = aisle;
@@ -30,7 +32,7 @@ public class Ingredient
         this.unit = unit;
         this.unitShort = unitShort;
         this.unitLong = unitLong;
-        this.originalString = orginalString;
+        this.originalString = originalString;
         this.metaInformation = metaInformation;
     }
 
@@ -52,5 +54,5 @@ public class Ingredient
 
     public String getOriginalString() {return originalString;}
 
-    public String[] getMetaInformation() {return metaInformation;}
+    public ArrayList<String> getMetaInformation() {return metaInformation;}
 }
