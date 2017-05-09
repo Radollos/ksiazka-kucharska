@@ -217,9 +217,9 @@ public class Recipe
         for (int i = 0; i < ingredientsJSON.length(); i++)
         {
             JSONObject ingredient = ingredientsJSON.getJSONObject(i);
-            int id = ingredient.getInt("id");
+            int id = ingredient.has("id") ? ingredient.getInt("id") : 0;
             String aisle = ingredient.getString("aisle");
-            String image = ingredient.getString("image");
+            String image = ingredient.has("image") ? ingredient.getString("image") : "";
             String name = ingredient.getString("name");
             double amount = ingredient.getDouble("amount");
             String unit = ingredient.getString("unit");
