@@ -47,92 +47,9 @@ public class Recipe
     private ArrayList<String> cuisines;
     private ArrayList<String> dishTypes;
     private String instructions;
-    //private ArrayList<InstructionStep> analyzedInstructions;
+    //private ArrayList<Instruction> analyzedInstructions;
 
     private JSONObject json;
-
-    public Recipe(JSONObject json) throws JSONException
-    {
-        this.json = json;
-        vegetarian = json.getBoolean("vegetarian");
-        vegan = json.getBoolean("vegan");
-        glutenFree = json.getBoolean("glutenFree");
-        dairyFree = json.getBoolean("dairyFree");
-        veryHealthy = json.getBoolean("veryHealthy");
-        cheap = json.getBoolean("cheap");
-        veryPopular = json.getBoolean("veryPopular");
-        sustainable = json.getBoolean("sustainable");
-        weightWatcherSmartPoints = json.getInt("weightWatcherSmartPoints");
-        gaps = json.getString("gaps");
-        lowFodmap = json.getBoolean("lowFodmap");
-        ketogenic = json.getBoolean("ketogenic");
-        whole30 = json.getBoolean("whole30");
-        servings = json.getInt("servings");
-        preparationMinutes = json.has("preparationMinutes") ? json.getInt("preparationMinutes") : 0;
-        cookingMinutes = json.has("cookingMinutes") ? json.getInt("cookingMinutes") : 0;
-        sourceUrl = json.getString("sourceUrl");
-        spoonacularSourceUrl = json.getString("spoonacularSourceUrl");
-        aggregateLikes = json.getInt("aggregateLikes");
-        spoonacularScore = json.getInt("spoonacularScore");
-        healthScore = json.getInt("healthScore");
-        creditText = json.has("creditText") ? json.getString("creditText") : "";
-        sourceName = json.has("sourceName") ? json.getString("sourceName") : "";
-        pricePerServing = json.getDouble("pricePerServing");
-
-
-        JSONArray ingredientsJSON = json.getJSONArray("extendedIngredients");
-        extendedIngredients = new ArrayList<Ingredient>(ingredientsJSON.length());
-        for (int i = 0; i < ingredientsJSON.length(); i++)
-        {
-            JSONObject ingredient = ingredientsJSON.getJSONObject(i);
-            int id = ingredient.getInt("id");
-            String aisle = ingredient.getString("aisle");
-            String image = ingredient.getString("image");
-            String name = ingredient.getString("name");
-            double amount = ingredient.getDouble("amount");
-            String unit = ingredient.getString("unit");
-            String unitShort = ingredient.getString("unitShort");
-            String unitLong = ingredient.getString("unitLong");
-            String originalString = ingredient.getString("originalString");
-
-
-            JSONArray metaTmp = ingredient.getJSONArray("metaInformation");
-            ArrayList<String> metaInformation = new ArrayList<>(metaTmp.length());
-            for(int j = 0; j < metaTmp.length(); j++) {
-                metaInformation.add(metaTmp.getString(j));
-            }
-
-            Ingredient newIngredient = new Ingredient(id, aisle, image, name, amount, unit, unitShort, unitLong, originalString, metaInformation);
-            extendedIngredients.add(newIngredient);
-        }
-
-        id = json.getInt("id");
-        title = json.getString("title");
-        readyInMinutes = json.getInt("readyInMinutes");
-        image = json.getString("image");
-        imageType = json.getString("imageType");
-
-        JSONArray cuisinesTemp = json.getJSONArray("cuisines");
-        cuisines = new ArrayList<>(cuisinesTemp.length());
-        for(int i=0; i<cuisinesTemp.length(); i++) {
-            cuisines.add(cuisinesTemp.getString(i));
-        }
-
-        JSONArray dishTypesTemp = json.getJSONArray("dishTypes");
-        cuisines = new ArrayList<>(dishTypesTemp.length());
-        for(int i=0; i<dishTypesTemp.length(); i++) {
-            dishTypes.add(dishTypesTemp.getString(i));
-        }
-
-        instructions = json.getString("instructions");
-
-
-    }
-
-    public void show()
-    {
-
-    }
 
     public boolean isVegetarian() {
         return vegetarian;
@@ -264,5 +181,76 @@ public class Recipe
 
     public String getInstructions() {
         return instructions;
+    }
+
+    public Recipe(JSONObject json) throws JSONException
+    {
+        this.json = json;
+        vegetarian = json.getBoolean("vegetarian");
+        vegan = json.getBoolean("vegan");
+        glutenFree = json.getBoolean("glutenFree");
+        dairyFree = json.getBoolean("dairyFree");
+        veryHealthy = json.getBoolean("veryHealthy");
+        cheap = json.getBoolean("cheap");
+        veryPopular = json.getBoolean("veryPopular");
+        sustainable = json.getBoolean("sustainable");
+        weightWatcherSmartPoints = json.getInt("weightWatcherSmartPoints");
+        gaps = json.getString("gaps");
+        lowFodmap = json.getBoolean("lowFodmap");
+        ketogenic = json.getBoolean("ketogenic");
+        whole30 = json.getBoolean("whole30");
+        servings = json.getInt("servings");
+        preparationMinutes = json.has("preparationMinutes") ? json.getInt("preparationMinutes") : 0;
+        cookingMinutes = json.has("cookingMinutes") ? json.getInt("cookingMinutes") : 0;
+        sourceUrl = json.getString("sourceUrl");
+        spoonacularSourceUrl = json.getString("spoonacularSourceUrl");
+        aggregateLikes = json.getInt("aggregateLikes");
+        spoonacularScore = json.getInt("spoonacularScore");
+        healthScore = json.getInt("healthScore");
+        creditText = json.has("creditText") ? json.getString("creditText") : "";
+        sourceName = json.has("sourceName") ? json.getString("sourceName") : "";
+        pricePerServing = json.getDouble("pricePerServing");
+
+
+        JSONArray ingredientsJSON = json.getJSONArray("extendedIngredients");
+        extendedIngredients = new ArrayList<Ingredient>(ingredientsJSON.length());
+        for (int i = 0; i < ingredientsJSON.length(); i++)
+        {
+            JSONObject ingredient = ingredientsJSON.getJSONObject(i);
+            int id = ingredient.has("id") ? ingredient.getInt("id") : 0;
+            String aisle = ingredient.getString("aisle");
+            String image = ingredient.has("image") ? ingredient.getString("image") : "";
+            String name = ingredient.getString("name");
+            double amount = ingredient.getDouble("amount");
+            String unit = ingredient.getString("unit");
+            String unitShort = ingredient.getString("unitShort");
+            String unitLong = ingredient.getString("unitLong");
+            String originalString = ingredient.getString("originalString");
+
+
+            JSONArray metaTmp = ingredient.getJSONArray("metaInformation");
+            String[] metaInformation = new String[metaTmp.length()];
+            for(int j = 0; j < metaTmp.length(); j++) {
+                metaInformation[j] = metaTmp.getString(j);
+            }
+
+            Ingredient newIngredient = new Ingredient(id, aisle, image, name, amount, unit, unitShort, unitLong, originalString, metaInformation);
+            extendedIngredients.add(newIngredient);
+        }
+
+        id = json.getInt("id");
+        title = json.getString("title");
+        readyInMinutes = json.getInt("readyInMinutes");
+        image = json.getString("image");
+        imageType = json.getString("imageType");
+
+        instructions = json.getString("instructions");
+
+
+    }
+
+    public void show()
+    {
+
     }
 }

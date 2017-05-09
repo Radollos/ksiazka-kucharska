@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
         tags = (EditText) findViewById(R.id.tags);
         list = (ListView) findViewById(R.id.listView);
 
-        catchStartButton(); //          catching start button
+   //     catchStartButton(); //          catching start button
                 
         send.setOnClickListener(new View.OnClickListener()
         {
@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity
                 String numberText = number.getText().toString();
                 String tagsText = tags.getText().toString();
                 tagsText = tagsText.replace(",", "%2C");
-                final String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=true&number=" +
-                        numberText + "&tags=" + tagsText;
+                final String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=true" +
+                       "&tags=" + tagsText;
 
                 new AsyncTask<Void, Void, HttpResponse<JsonNode>>()
                 {
@@ -120,18 +120,18 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void catchStartButton(){
-        start = (Button) findViewById(R.id.startButton);
-        start.setOnClickListener(new View.OnClickListener(){
+//    private void catchStartButton(){
+//        start = (Button) findViewById(R.id.startButton);
+//        start.setOnClickListener(new View.OnClickListener(){
+//
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getApplicationContext(), Start.class);
+//                startActivity(intent);
+//            }
+//        });
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Start.class);
-                startActivity(intent);
-            }
-        });
 
-    }
 
 
 
