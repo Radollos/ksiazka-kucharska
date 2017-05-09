@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity
                 String numberText = number.getText().toString();
                 String tagsText = tags.getText().toString();
                 tagsText = tagsText.replace(",", "%2C");
-                final String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=true&number=" +
-                        numberText + "&tags=" + tagsText;
+                final String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=true" +
+                       "&tags=" + tagsText;
 
                 new AsyncTask<Void, Void, HttpResponse<JsonNode>>()
                 {
