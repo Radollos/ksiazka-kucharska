@@ -39,8 +39,9 @@ public class MainKlaudia extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                list.setAdapter(null);
                 String tagsText = tags.getText().toString();
-                recipes = searcher.ingredientsSearch(tagsText);
+                recipes = searcher.dietSearch(tagsText);
                 for (int i = 0; i < recipes.length; i++)
                     adapterList.add(recipes[i].getTitle());
 
