@@ -1,6 +1,8 @@
 package com.example.klaudia.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,20 +11,26 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainKlaudia extends AppCompatActivity
 {
     Button send;
     ListView list;
     EditText tags;
+    EditText calories;
+    EditText type;
     ArrayList<String> adapterList = new ArrayList<String>();
-    Searcher searcher = new Searcher();
+    Searcher searcher;
     Recipe [] recipes;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,6 +40,8 @@ public class MainKlaudia extends AppCompatActivity
 
         send = (Button) findViewById(R.id.send);
         tags = (EditText) findViewById(R.id.tags);
+        calories = (EditText) findViewById(R.id.calories);
+        type = (EditText) findViewById(R.id.type);
         list = (ListView) findViewById(R.id.listView);
 
         send.setOnClickListener(new View.OnClickListener()
@@ -39,14 +49,26 @@ public class MainKlaudia extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                list.setAdapter(null);
-                String tagsText = tags.getText().toString();
-                recipes = searcher.dietSearch(tagsText);
-                for (int i = 0; i < recipes.length; i++)
-                    adapterList.add(recipes[i].getTitle());
+                searcher = new Searcher(MainKlaudia.this);
+                HashMap<String,String> nameValue = new HashMap<String, String>();
+                nameValue.put("s_tags", tags.getText().toString());
+                nameValue.put("i_calories", calories.getText().toString());
+                nameValue.put("s_type", type.getText().toString());
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainKlaudia.this, android.R.layout.simple_list_item_1, adapterList);
-                list.setAdapter(adapter);
+                recipes = searcher.complexSearch(nameValue);
+                if (recipes != null)
+                {
+                    for (int i = 0; i < recipes.length; i++)
+                        adapterList.add(recipes[i].getTitle());
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainKlaudia.this, android.R.layout.simple_list_item_1, adapterList);
+                    list.setAdapter(adapter);
+                }
+
+ //               else
+ //                   Toast.makeText(MainKlaudia.this, "Brak wynikow dla podanych danych ", Toast.LENGTH_LONG).show();
+
+
             }
         });
 
@@ -65,4 +87,6 @@ public class MainKlaudia extends AppCompatActivity
 
         });
     }
+
+
 }
