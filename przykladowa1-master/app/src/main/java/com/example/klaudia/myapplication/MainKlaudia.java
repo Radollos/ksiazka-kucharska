@@ -2,6 +2,7 @@ package com.example.klaudia.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,7 +29,7 @@ public class MainKlaudia extends AppCompatActivity
     EditText tags;
     EditText calories;
     EditText type;
-    ArrayList<String> adapterList = new ArrayList<String>();
+//    ArrayList<String> adapterList = new ArrayList<String>();
     Searcher searcher;
     Recipe [] recipes;
     Context context;
@@ -51,26 +53,20 @@ public class MainKlaudia extends AppCompatActivity
             public void onClick(View view)
             {
                 searcher = new Searcher(MainKlaudia.this);
+                //aby w comlex searchu mozna bylo uzywac tylko niektorych pol do wyszukiwania uzywam hashmapy, do ktorej dodaje nazwe atrybutu i jego wartosc
+                // (to co wpisal uzytkownik)
+                //nazwy kluczy musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
                 HashMap<String,String> nameValue = new HashMap<String, String>();
-                //nazwy obiektow musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
                 nameValue.put("s_query", tags.getText().toString());
                 nameValue.put("i_maxCalories", calories.getText().toString());
                 nameValue.put("s_type", type.getText().toString());
 
-                recipes = searcher.complexSearch(nameValue);
-                if (recipes != null)
+                HashMap<String, Bitmap> results = searcher.complexSearch_Titles(nameValue);
+                if (results != null)
                 {
-                    for (int i = 0; i < recipes.length; i++)
-                        adapterList.add(recipes[i].getTitle());
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainKlaudia.this, android.R.layout.simple_list_item_1, adapterList);
+                    CustomList adapter = new CustomList(MainKlaudia.this, results.keySet().toArray(new String [results.size()]), results.values().toArray(new Bitmap [results.size()]));
                     list.setAdapter(adapter);
                 }
-
- //               else
- //                   Toast.makeText(MainKlaudia.this, "Brak wynikow dla podanych danych ", Toast.LENGTH_LONG).show();
-
-
             }
         });
 

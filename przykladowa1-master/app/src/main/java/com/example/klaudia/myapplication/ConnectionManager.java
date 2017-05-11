@@ -11,6 +11,7 @@ import org.json.JSONObject;
  * Created by Klaudia on 2017-04-24.
  */
 
+//klasa sluzaca do laczenia sie z baza
 public class ConnectionManager extends AsyncTask<String, Void, HttpResponse<JsonNode>>
 {
     JsonNode jsonResponse;
