@@ -127,7 +127,9 @@ public class Recipe
 
         instructions = json.getString("instructions");
         JSONArray analyzedInstructionsTmp = json.getJSONArray("analyzedInstructions");
-        JSONArray stepsTmp = analyzedInstructionsTmp.getJSONArray(1);
+        JSONObject tmp = analyzedInstructionsTmp.getJSONObject(0);
+        JSONArray stepsTmp = tmp.getJSONArray("steps");
+//        JSONArray stepsTmp = analyzedInstructionsTmp.getJSONArray("steps");
         analyzedInstructions = new ArrayList<>(stepsTmp.length());
         for(int i = 0; i < stepsTmp.length(); i++) {
             JSONObject step = stepsTmp.getJSONObject(i);

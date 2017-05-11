@@ -32,6 +32,7 @@ public class MainKlaudia extends AppCompatActivity
     Recipe [] recipes;
     Context context;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -51,8 +52,9 @@ public class MainKlaudia extends AppCompatActivity
             {
                 searcher = new Searcher(MainKlaudia.this);
                 HashMap<String,String> nameValue = new HashMap<String, String>();
-                nameValue.put("s_tags", tags.getText().toString());
-                nameValue.put("i_calories", calories.getText().toString());
+                //nazwy obiektow musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
+                nameValue.put("s_query", tags.getText().toString());
+                nameValue.put("i_maxCalories", calories.getText().toString());
                 nameValue.put("s_type", type.getText().toString());
 
                 recipes = searcher.complexSearch(nameValue);

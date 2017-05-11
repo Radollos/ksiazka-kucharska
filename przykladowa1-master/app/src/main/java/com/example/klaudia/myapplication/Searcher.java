@@ -42,15 +42,6 @@ public class Searcher
 
     public Recipe getRecipeById(String id)
     {
-        try
-        {
-            int ID = Integer.getInteger(id);
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(context, "ID musi byc liczba calkowita", Toast.LENGTH_LONG).show();
-        }
-
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/information?includeNutrition=false";
         JsonNode response = null;
         Recipe result = null;
@@ -104,6 +95,9 @@ public class Searcher
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
         JSONArray array = getJsonArrayFromRequest(request, "recipes");
+        if (array == null)
+            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
+
         getRecipesFromArray(array);
         return recipes;
     }
@@ -114,6 +108,9 @@ public class Searcher
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
         JSONArray array = getJsonArrayFromRequest(request, "");
+        if (array == null)
+            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
+
         getRecipesFromArray(array);
         return recipes;
     }
@@ -132,6 +129,9 @@ public class Searcher
 
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
         JSONArray array = getJsonArrayFromRequest(request, "");
+        if (array == null)
+            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
+
         getRecipesFromArray(array);
         return recipes;
     }
@@ -139,15 +139,22 @@ public class Searcher
 
     public Recipe [] complexSearch(HashMap<String, String> nameValue)
     {
-        //trzeba dopisac spradzenie poprawnosc typow danych
+        //Pole query jest wymagane jako czesc requesta
+        String query = "";
         boolean correct = true;
+
         for (Map.Entry pair : nameValue.entrySet())
+        {
             if (!checkTypeCorrectness(pair.getKey().toString(), pair.getValue().toString()))
             {
                 Toast.makeText(context, "Niepoprawny format danych " + pair.getKey(), Toast.LENGTH_LONG).show();
                 correct = false;
                 break;
             }
+
+            else if (pair.getKey() == "s_query")
+                query = pair.getValue().toString();
+        }
 
         if (correct)
         {
@@ -159,7 +166,7 @@ public class Searcher
                 Object key = pair.getKey();
                 Object value = pair.getValue();
 
-                if (value != null)
+                if (key.toString() != "s_query" && value != null)
                     result += key.toString().substring(2, key.toString().length()) + "=" + value + ".";
             }
 
@@ -167,8 +174,11 @@ public class Searcher
                 result = result.substring(0, result.length() - 1);
 
             result = result.replace('.', '&');
-            String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?addRecipeInformation=false&number=10&" + changeTextToRequest(result);
+            String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&query=" + changeTextToRequest(query) + "&ranking=1&" + changeTextToRequest(result);
             JSONArray array = getJsonArrayFromRequest(request, "results");
+            if (array == null)
+                Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
+
             getRecipesFromArray(array);
             return recipes;
         }
