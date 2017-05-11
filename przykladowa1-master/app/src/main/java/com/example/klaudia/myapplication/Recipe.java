@@ -87,7 +87,7 @@ public class Recipe
         {
             JSONObject ingredient = ingredientsJSON.getJSONObject(i);
             int id = ingredient.has("id") ? ingredient.getInt("id") : 0;
-            String aisle = ingredient.getString("aisle");
+            String aisle = ingredient.has("aisle") ? ingredient.getString("aisle") : "";
             String image = ingredient.has("image") ? ingredient.getString("image") : "";
             String name = ingredient.getString("name");
             double amount = ingredient.getDouble("amount");
@@ -127,27 +127,28 @@ public class Recipe
 
         instructions = json.getString("instructions");
         JSONArray analyzedInstructionsTmp = json.getJSONArray("analyzedInstructions");
-        JSONObject tmp = analyzedInstructionsTmp.getJSONObject(0);
-        JSONArray stepsTmp = tmp.getJSONArray("steps");
-//        JSONArray stepsTmp = analyzedInstructionsTmp.getJSONArray("steps");
-        analyzedInstructions = new ArrayList<>(stepsTmp.length());
-        for(int i = 0; i < stepsTmp.length(); i++) {
-            JSONObject step = stepsTmp.getJSONObject(i);
+        if (analyzedInstructionsTmp.length() > 0)
+        {
+            JSONArray stepsTmp = analyzedInstructionsTmp.getJSONObject(0).getJSONArray("steps");
+            analyzedInstructions = new ArrayList<>(stepsTmp.length());
+            for (int i = 0; i < stepsTmp.length(); i++)
+            {
+                JSONObject step = stepsTmp.getJSONObject(i);
 
-            JSONArray stepIngTmp = step.getJSONArray("ingredients");
-            ArrayList<Ingredient> stepIngredients = new ArrayList<>(stepIngTmp.length());
-            for(int j=0; j<stepIngTmp.length(); j++){
-                stepIngredients.add(getIngredientById(stepIngTmp.getJSONObject(j).getInt("id")));
+                JSONArray stepIngTmp = step.getJSONArray("ingredients");
+                ArrayList<Ingredient> stepIngredients = new ArrayList<>(stepIngTmp.length());
+                for (int j = 0; j < stepIngTmp.length(); j++)
+                    stepIngredients.add(getIngredientById(stepIngTmp.getJSONObject(j).getInt("id")));
+
+                JSONArray stepEqTmp = step.getJSONArray("equipment");
+                ArrayList<Equipment> stepEquipment = new ArrayList<>(stepEqTmp.length());
+                for (int j = 0; j < stepEqTmp.length(); j++)
+                {
+                    JSONObject eqTmp = stepEqTmp.getJSONObject(j);
+                    stepEquipment.add(new Equipment(eqTmp.getInt("id"), eqTmp.getString("name"), eqTmp.getString("image")));
+                }
+                analyzedInstructions.add(new InstructionStep(step.getInt("number"), step.getString("step"), stepIngredients, stepEquipment));
             }
-
-            JSONArray stepEqTmp = step.getJSONArray("equipment");
-            ArrayList<Equipment> stepEquipment = new ArrayList<>(stepEqTmp.length());
-            for(int j=0; j<stepEqTmp.length(); j++){
-                JSONObject eqTmp = stepEqTmp.getJSONObject(j);
-                stepEquipment.add(new Equipment(eqTmp.getInt("id"),eqTmp.getString("name"),eqTmp.getString("image")));
-            }
-
-            analyzedInstructions.add(new InstructionStep(step.getInt("number"), step.getString("step"), stepIngredients, stepEquipment));
         }
     }
 
