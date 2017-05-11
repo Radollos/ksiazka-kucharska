@@ -100,9 +100,9 @@ public class Searcher
 
 
 
-    public Recipe [] ingredientsSearch(String text)
+    public Recipe [] ingredientsSearch(String ingredients)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(ingredients) +  "&limitLicense=false&number=10";
         try
         {
             JSONArray array = searchRecipes(request, "");
