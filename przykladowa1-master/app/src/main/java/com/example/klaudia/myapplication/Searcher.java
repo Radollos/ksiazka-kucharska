@@ -139,6 +139,8 @@ public class Searcher
 
     public Recipe [] complexSearch(HashMap<String, String> nameValue)
     {
+        //nazwy kluczy musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
+
         //Pole query jest wymagane jako czesc requesta
         String query = "";
         boolean correct = true;
