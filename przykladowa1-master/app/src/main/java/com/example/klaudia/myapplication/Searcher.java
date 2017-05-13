@@ -26,19 +26,10 @@ import java.util.concurrent.ExecutionException;
 
 public class Searcher
 {
-    //potrzebne do utworzenie Toasta
-    Context context;
-
-
-    public Searcher () {};
-    public Searcher(Context context)
-    {
-        this.context = context;
-    }
-
+    public JSONArray recipesJSONArray;
 
     //wyszukiwanie przepisu po id
-    public Recipe getRecipeById(String id)
+    public Recipe getRecipeById(int id)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/information?includeNutrition=false";
         JsonNode response = null;
@@ -58,106 +49,100 @@ public class Searcher
     }
 
 
+    public JSONObject getRecipeJSONObjectById(int id)
+    {
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/information?includeNutrition=false";
+        JsonNode response = null;
+        JSONObject result = null;
+
+        try
+        {
+            response = (JsonNode) new ConnectionManager().execute(request).get().getBody();
+            result = response.getObject();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     //wyszukiwanie przepisow po tagach
-    public Recipe [] tagsSearch (String text)
+    public JSONArray tagsSearch (String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
-        JSONArray array = getJsonArrayFromRequest(request, "recipes");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
+        return recipesJSONArray;
     }
 
     public HashMap<String, Bitmap> tagsSearch_TitlesImages (String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
-        JSONArray array = getJsonArrayFromRequest(request, "recipes");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesTitlesmagesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
+        return getRecipesTitlesmagesFromArray(recipesJSONArray);
     }
 
 
     //wyszukiwanie przepisow po skladnikach
-    public Recipe [] ingredientsSearch(String text)
+    public JSONArray ingredientsSearch(String text)
     {
         HashMap<String, ImageView> result = new HashMap<String, ImageView>();
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
-        JSONArray array = getJsonArrayFromRequest(request, "");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        return recipesJSONArray;
     }
 
     public HashMap<String, Bitmap> ingredientsSearch_TitlesImages(String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
-        JSONArray array = getJsonArrayFromRequest(request, "");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesTitlesmagesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        return getRecipesTitlesmagesFromArray(recipesJSONArray);
     }
 
 
     //wysztkiwanie podobnych przepisow
-    public Recipe [] similarRecipesSearch(int id)
+    public JSONArray similarRecipesSearch(int id)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
-        JSONArray array = getJsonArrayFromRequest(request, "");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        return recipesJSONArray;
     }
 
     public HashMap<String, Bitmap> similarRecipesSearch_Titles(int id)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
-        JSONArray array = getJsonArrayFromRequest(request, "");
-        if (array == null)
-            Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-        return getRecipesTitlesmagesFromArray(array);
+        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        return getRecipesTitlesmagesFromArray(recipesJSONArray);
     }
 
 
     //wyszukiwanie zaawansowane
     //nazwy kluczy musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
-    public Recipe [] complexSearch(HashMap<String, String> nameValue)
+    public JSONArray complexSearch(HashMap<String, String> nameValue)
     {
-        if (checkMapCorrectness(nameValue))
+        String result = "";
+        Iterator it = nameValue.entrySet().iterator();
+        while (it.hasNext())
         {
-            String result = "";
-            Iterator it = nameValue.entrySet().iterator();
-            while (it.hasNext())
-            {
-                Map.Entry pair = (Map.Entry) it.next();
-                Object key = pair.getKey();
-                Object value = pair.getValue();
+            Map.Entry pair = (Map.Entry) it.next();
+            Object key = pair.getKey();
+            Object value = pair.getValue();
 
-                //nie zapisujemy do resulta 2 poczatkowych liter klucza, czyli litery oznaczej typ danej i '_'. Kropka sluzy do oddzielenia pary (klucz, wartosc)
-                if (key.toString() != "s_query" && value != null)
-                    result += key.toString().substring(2, key.toString().length()) + "=" + value + ".";
-            }
-
-            if (result.length() > 0 && result.charAt(result.length()-1) == '.')
-                result = result.substring(0, result.length() - 1);
-
-            result = result.replace('.', '&');
-            String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(result);
-            JSONArray array = getJsonArrayFromRequest(request, "results");
-            if (array == null)
-                Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-            return getRecipesFromArray(array);
+            //nie zapisujemy do resulta 2 poczatkowych liter klucza, czyli litery oznaczej typ danej i '_'. Kropka sluzy do oddzielenia pary (klucz, wartosc)
+            if (key.toString() != "s_query" && value != null)
+                result += key.toString().substring(2, key.toString().length()) + "=" + value + ".";
         }
-        else
-            return null;
+
+        if (result.length() > 0 && result.charAt(result.length()-1) == '.')
+            result = result.substring(0, result.length() - 1);
+
+        result = result.replace('.', '&');
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(result);
+        recipesJSONArray = getJsonArrayFromRequest(request, "results");
+        return recipesJSONArray;
     }
+
 
     public HashMap<String, Bitmap> complexSearch_Titles(HashMap<String, String> nameValue)
     {
@@ -181,11 +166,8 @@ public class Searcher
 
             userInput = userInput.replace('.', '&');
             String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
-            JSONArray array = getJsonArrayFromRequest(request, "results");
-            if (array == null)
-                Toast.makeText(context, "Brak wynikow dla podanych danych.", Toast.LENGTH_LONG).show();
-
-            return getRecipesTitlesmagesFromArray(array);
+            recipesJSONArray = getJsonArrayFromRequest(request, "results");
+            return getRecipesTitlesmagesFromArray(recipesJSONArray);
         }
         else
             return null;
@@ -199,30 +181,19 @@ public class Searcher
         try
         {
             response = (JsonNode) new ConnectionManager().execute(request).get().getBody();
+            //w bazie tablice z przepisami sa roznie zapisane - nazywaja sie "results" albo "recipes" albo nie maja nazwy. Po to jest zmienna jsonArrayName, ktora oznacza jak
+            //zapisana jest tabela w JSONie. Inaczej wyciaga sie dane z tabeli, ktora ma nazwe i ktora jej nie ma
+            if (jsonArrayName != "")
+                recipesJSONArray = response.getObject().getJSONArray(jsonArrayName);
+
+            else
+                recipesJSONArray = response.getArray();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-
-        JSONArray array = null;
-
-        try
-        {
-            //w bazie tablice z przepisami sa roznie zapisane - nazywaja sie "results" albo "recipes" albo nie maja nazwy. Po to jest zmienna jsonArrayName, ktora oznacza jak
-            //zapisana jest tabela w JSONie. Inaczej wyciaga sie dane z tabeli, ktora ma nazwe i ktora jej nie ma
-            if (jsonArrayName != "")
-                array = response.getObject().getJSONArray(jsonArrayName);
-
-            else
-                array = response.getArray();
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        return array;
+        return recipesJSONArray;
     }
 
 
@@ -235,7 +206,7 @@ public class Searcher
             recipes = new Recipe[array.length()];
             for (int i = 0; i < array.length(); i++)
             {
-                Recipe recipe = getRecipeById(array.getJSONObject(i).getString("id"));
+                Recipe recipe = getRecipeById(array.getJSONObject(i).getInt("id"));
                 recipes[i] = recipe;
             }
         }
@@ -244,6 +215,28 @@ public class Searcher
             e.printStackTrace();
         }
         return recipes;
+    }
+
+
+    public JSONObject getJSONObjectFromArray(int index)
+    {
+        JSONObject result = null;
+        try
+        {
+            if(recipesJSONArray.getJSONObject(index).has("vegan"))
+                result = recipesJSONArray.getJSONObject(index);
+
+            else
+            {
+                int recipceIndex = recipesJSONArray.getJSONObject(index).getInt("id");
+                result = getRecipeJSONObjectById(recipceIndex);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 
@@ -256,11 +249,8 @@ public class Searcher
             {
                 JSONObject recipe = array.getJSONObject(i);
                 String title = recipe.getString("title");
-        //        ImageView image = new ImageView(context);
-                Bitmap tmp = new DownloadImageTask(context).execute(recipe.getString("image")).get();
+                Bitmap tmp = new DownloadImageTask().execute(recipe.getString("image")).get();
                 Bitmap scaled = Bitmap.createScaledBitmap(tmp, 50, 50, true);
-        //        image.setImageBitmap(scaled);
-        //        image.setBackgroundColor(Color.BLACK);
                 result.put(title, scaled);
             }
         }
@@ -287,7 +277,6 @@ public class Searcher
         {
             if (!checkTypeCorrectness(pair.getKey().toString(), pair.getValue().toString()))
             {
-                Toast.makeText(context, "Niepoprawny format danych " + pair.getKey().toString().substring(2, pair.getKey().toString().length()), Toast.LENGTH_LONG).show();
                 correct = false;
                 break;
             }

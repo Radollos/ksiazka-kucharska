@@ -24,12 +24,12 @@ public class Fridge {
         return ingredients.remove(ingredient);
     }
 
-    public Recipe[] findRecipes(){
-        ListIterator<String> it = ingredients.listIterator();
-        String request = "";
-        while(it.hasNext())
-            request+=("," + it.next());
-        Searcher searcher = new Searcher();
-        return searcher.ingredientsSearch(request);
-    }
+//    public Recipe[] findRecipes(){
+//        ListIterator<String> it = ingredients.listIterator();
+//        String request = "";
+//        while(it.hasNext())
+//            request+=("," + it.next());
+//        Searcher searcher = new Searcher();
+//        return searcher.ingredientsSearch(request);
+//    }
 }

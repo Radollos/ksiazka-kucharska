@@ -19,6 +19,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,11 +31,7 @@ public class MainKlaudia extends AppCompatActivity
     EditText tags;
     EditText calories;
     EditText type;
-//    ArrayList<String> adapterList = new ArrayList<String>();
     Searcher searcher;
-    Recipe [] recipes;
-    Context context;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -52,14 +50,11 @@ public class MainKlaudia extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                searcher = new Searcher(MainKlaudia.this);
-                //aby w comlex searchu mozna bylo uzywac tylko niektorych pol do wyszukiwania uzywam hashmapy, do ktorej dodaje nazwe atrybutu i jego wartosc
-                // (to co wpisal uzytkownik)
-                //nazwy kluczy musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
+                searcher = new Searcher();
                 HashMap<String,String> nameValue = new HashMap<String, String>();
-                nameValue.put("s_query", tags.getText().toString());
-                nameValue.put("i_maxCalories", calories.getText().toString());
-                nameValue.put("s_type", type.getText().toString());
+                nameValue.put("query", tags.getText().toString());
+                nameValue.put("maxCalories", calories.getText().toString());
+                nameValue.put("type", type.getText().toString());
 
                 HashMap<String, Bitmap> results = searcher.complexSearch_Titles(nameValue);
                 if (results != null)
@@ -78,7 +73,7 @@ public class MainKlaudia extends AppCompatActivity
             {
                 Intent intent = new Intent(getApplicationContext(), RecipeList.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("index", position);
+                bundle.putString("jsonObject", searcher.getJSONObjectFromArray(position).toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }

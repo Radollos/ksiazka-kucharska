@@ -17,16 +17,6 @@ import java.net.URL;
 //klasa odpowiedzialna za pobieranie obrazka dania
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 {
-    ImageView bitmapImage;
-    Context context;
-
-    public DownloadImageTask(Context context)
-    {
-        this.context = context;
-        bitmapImage = new ImageView(context);
-    }
-
-
     protected Bitmap doInBackground(String... urls)
     {
         String imageUrl = urls[0];
@@ -45,10 +35,4 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 
         return image;
     }
-
-    protected void onPostExecute(Bitmap result)
-    {
-        bitmapImage.setImageBitmap(result);
-    }
-
 }
