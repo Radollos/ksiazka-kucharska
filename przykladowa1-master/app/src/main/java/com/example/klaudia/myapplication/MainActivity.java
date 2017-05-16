@@ -1,142 +1,125 @@
 package com.example.klaudia.myapplication;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import java.util.ArrayList;
-import org.json.*;
-
-
+import android.widget.GridView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
-{
-    private final String TAG = MainActivity.class.getSimpleName();
-    public String link = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/products/classify";
-   //String link = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/156992";
-    Button send;
-    EditText number;
-    EditText tags;
-    ListView list;
-    Recipe [] recipes;
-    ArrayList<String> adapterList = new ArrayList<String>();
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button start; //                                    button to start GridView
+    private GridView gridview;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        send = (Button) findViewById(R.id.send);
-        number = (EditText) findViewById(R.id.number);
-        tags = (EditText) findViewById(R.id.tags);
-        list = (ListView) findViewById(R.id.listView);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-   //     catchStartButton(); //          catching start button
-                
-        send.setOnClickListener(new View.OnClickListener()
-        {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                String numberText = number.getText().toString();
-                String tagsText = tags.getText().toString();
-                tagsText = tagsText.replace(",", "%2C");
-                final String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=true" +
-                       "&tags=" + tagsText;
-
-                new AsyncTask<Void, Void, HttpResponse<JsonNode>>()
-                {
-                    @Override
-                    protected void onPreExecute() {
-
-                    }
-
-                    @Override
-                    protected HttpResponse<JsonNode> doInBackground(Void... params)
-                    {
-                        HttpResponse<JsonNode> response = null;
-                        try {
-                            response = Unirest.get(request)
-                                    .header("X-Mashape-Key", "OXOqW68hHLmshp14m3QjfcQLuoqop1WP587jsnETvuhAoakUUI")
-                                    .header("Accept", "application/json")
-                                    .asJson();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        return response;
-                    }
-
-                    protected void onPostExecute(HttpResponse<JsonNode> response)
-                    {
-                        try
-                        {
-                            JSONObject object = response.getBody().getObject();
-                            JSONArray array = object.getJSONArray("recipes");
-                            recipes = new Recipe[array.length()];
-
-                            for (int i = 0; i < array.length(); i++)
-                            {
-                                Recipe recipe = new Recipe(array.getJSONObject(i));
-                                recipes[i] = recipe;
-                                adapterList.add(recipe.getTitle());
-                            }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, adapterList);
-                            list.setAdapter(adapter);
-
-                        }
-                        catch (JSONException e)
-                        {
-                            e.printStackTrace();
-                        }
-                    }
-
-                }.execute();
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
-            {
-                Intent intent = new Intent(getApplicationContext(), RecipeList.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("index", position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+         createGridView();
+    }
+
+    private void createGridView(){
+        gridview = (GridView) findViewById(R.id.gridview);
+        gridview.setAdapter(new ImageAdapter(this));
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Toast.makeText(getApplicationContext(), "You chose " + position,
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-//    private void catchStartButton(){
-//        start = (Button) findViewById(R.id.startButton);
-//        start.setOnClickListener(new View.OnClickListener(){
+    @Override
+    public void onBackPressed() {                                                                   // setting nav drawer
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.fast_search) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        }
+        else if (id == R.id.show_recipe) {
+            Intent intent = new Intent(this, RecipeView.class);
+            startActivity(intent);
+        }
 //
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), Start.class);
-//                startActivity(intent);
-//            }
-//        });
+//        }
 
 
-
-
-
-
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
-
-
-
