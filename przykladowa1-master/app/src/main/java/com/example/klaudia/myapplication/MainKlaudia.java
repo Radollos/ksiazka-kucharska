@@ -1,6 +1,9 @@
 package com.example.klaudia.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,21 +11,27 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainKlaudia extends AppCompatActivity
 {
     Button send;
     ListView list;
     EditText tags;
-    ArrayList<String> adapterList = new ArrayList<String>();
-    Searcher searcher = new Searcher();
-    Recipe [] recipes;
+    EditText calories;
+    EditText type;
+    Searcher searcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -32,6 +41,8 @@ public class MainKlaudia extends AppCompatActivity
 
         send = (Button) findViewById(R.id.send);
         tags = (EditText) findViewById(R.id.tags);
+        calories = (EditText) findViewById(R.id.calories);
+        type = (EditText) findViewById(R.id.type);
         list = (ListView) findViewById(R.id.listView);
 
         send.setOnClickListener(new View.OnClickListener()
@@ -39,14 +50,18 @@ public class MainKlaudia extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                list.setAdapter(null);
-                String tagsText = tags.getText().toString();
-                recipes = searcher.dietSearch(tagsText);
-                for (int i = 0; i < recipes.length; i++)
-                    adapterList.add(recipes[i].getTitle());
+                searcher = new Searcher();
+                HashMap<String,String> nameValue = new HashMap<String, String>();
+                nameValue.put("query", tags.getText().toString());
+                nameValue.put("maxCalories", calories.getText().toString());
+                nameValue.put("type", type.getText().toString());
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainKlaudia.this, android.R.layout.simple_list_item_1, adapterList);
-                list.setAdapter(adapter);
+                HashMap<String, Bitmap> results = searcher.complexSearch_Titles(nameValue);
+                if (results != null)
+                {
+                    CustomList adapter = new CustomList(MainKlaudia.this, results.keySet().toArray(new String [results.size()]), results.values().toArray(new Bitmap [results.size()]));
+                    list.setAdapter(adapter);
+                }
             }
         });
 
@@ -58,11 +73,13 @@ public class MainKlaudia extends AppCompatActivity
             {
                 Intent intent = new Intent(getApplicationContext(), RecipeList.class);
                 Bundle bundle = new Bundle();
-                bundle.putInt("index", position);
+                bundle.putString("jsonObject", searcher.getJSONObjectFromArray(position).toString());
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
 
         });
     }
+
+
 }
