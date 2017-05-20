@@ -50,7 +50,7 @@ public class Recipe
     private ArrayList<InstructionStep> analyzedInstructions;
 
     private JSONObject json;
-
+    int test;
 
     public Recipe(JSONObject json) throws JSONException
     {
