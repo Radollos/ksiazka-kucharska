@@ -34,6 +34,10 @@ public class RecipeView extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,10 +85,6 @@ public class RecipeView extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-    //    if (id == 5) {
-    //        return true;
-    //    }
 
         return super.onOptionsItemSelected(item);
     }
