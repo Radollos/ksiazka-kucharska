@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Just food</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="search_button">Search</string>
+    <string name="title_activity_recipe_view">RecipeView</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+	<string name="action_settings">Settings</string>
+    <string name="hint">Find your recipe</string>
+    <string name="save">Save</string>
+    <string name="go_to_second_activity">My Recipes</string>
+    <string name="second_activity">My Recipes</string>
+    <string name="saved">Go to your recipes</string>
+    <string name="info">Saving your individual Menu</string>
+</resources>
