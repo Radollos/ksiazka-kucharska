@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -93,8 +95,10 @@ public class RecipesListView extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //na razie wyświetlanie przepisu jako nowa aktywość do pracy nad widokiem, potem będziemy ogarniać fragmenty we fragmencie
                 Intent intent = new Intent(getApplicationContext(), RecipeView.class);
-                intent.putExtra("title", titles[position]);
-                intent.putExtra("bitmap", bitmaps[position]);
+                JSONObject recipeJSONObject = ((MyApplication) getApplication()).getSearcher().getJSONObjectFromArray(position);
+//                intent.putExtra("title", titles[position]);
+//                intent.putExtra("bitmap", bitmaps[position]);
+                intent.putExtra("recipe", recipeJSONObject.toString());
                 startActivity(intent);
             }
         });
