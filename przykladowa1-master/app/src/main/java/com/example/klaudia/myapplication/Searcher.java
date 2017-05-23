@@ -26,7 +26,8 @@ import java.util.concurrent.ExecutionException;
 
 public class Searcher
 {
-    public JSONArray recipesJSONArray;
+    private JSONArray recipesJSONArray;
+
 
     //wyszukiwanie przepisu po id
     public Recipe getRecipeById(int id)
