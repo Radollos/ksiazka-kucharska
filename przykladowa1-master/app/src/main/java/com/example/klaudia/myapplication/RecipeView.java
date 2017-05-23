@@ -44,7 +44,9 @@ public class RecipeView extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_view);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getIntent().getStringExtra("title"));
         setSupportActionBar(toolbar);
+        //toolbar.setTitle(getIntent().getStringExtra("title"));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -60,7 +62,7 @@ public class RecipeView extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -68,7 +70,9 @@ public class RecipeView extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+
     }
+
 
 
     @Override
@@ -83,10 +87,18 @@ public class RecipeView extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String upperCase(String toUpperCase){ //duza literka
+        return toUpperCase.substring(0, 1).toUpperCase() + toUpperCase.substring(1);
     }
 
     /**
@@ -151,11 +163,11 @@ public class RecipeView extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "Ingredients";
                 case 1:
-                    return "SECTION 2";
+                    return "Instruction";
                 case 2:
-                    return "SECTION 3";
+                    return "Description";
             }
             return null;
         }
