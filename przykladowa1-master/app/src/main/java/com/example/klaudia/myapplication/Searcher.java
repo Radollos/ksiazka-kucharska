@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,7 +28,8 @@ import java.util.concurrent.ExecutionException;
 public class Searcher
 {
     private JSONArray recipesJSONArray;
-
+    private HashMap<String, Bitmap> titleImage;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     //wyszukiwanie przepisu po id
     public Recipe getRecipeById(int id)
@@ -77,11 +79,11 @@ public class Searcher
         return recipesJSONArray;
     }
 
-    public HashMap<String, Bitmap> tagsSearch_TitlesImages (String text)
+    public void tagsSearch_TitlesImages (String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
         recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
-        return getRecipesTitlesmagesFromArray(recipesJSONArray);
+        getRecipesTitlesmagesFromArray(recipesJSONArray);
     }
 
 
@@ -94,11 +96,18 @@ public class Searcher
         return recipesJSONArray;
     }
 
-    public HashMap<String, Bitmap> ingredientsSearch_TitlesImages(String text)
+    public void ingredientsSearch_TitlesImages(String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
-        return getRecipesTitlesmagesFromArray(recipesJSONArray);
+        getRecipesTitlesmagesFromArray(recipesJSONArray);
+    }
+
+    public void similarRecipesSearch_Titles(int id)
+    {
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
+        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        getRecipesTitlesmagesFromArray(recipesJSONArray);
     }
 
 
@@ -110,12 +119,7 @@ public class Searcher
         return recipesJSONArray;
     }
 
-    public HashMap<String, Bitmap> similarRecipesSearch_Titles(int id)
-    {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
-        recipesJSONArray = getJsonArrayFromRequest(request, "");
-        return getRecipesTitlesmagesFromArray(recipesJSONArray);
-    }
+
 
 
     //wyszukiwanie zaawansowane
@@ -145,7 +149,7 @@ public class Searcher
     }
 
 
-    public HashMap<String, Bitmap> complexSearch_Titles(HashMap<String, String> nameValue)
+    public void complexSearch_Titles(HashMap<String, String> nameValue)
     {
         if (checkMapCorrectness(nameValue))
         {
@@ -168,10 +172,8 @@ public class Searcher
             userInput = userInput.replace('.', '&');
             String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
             recipesJSONArray = getJsonArrayFromRequest(request, "results");
-            return getRecipesTitlesmagesFromArray(recipesJSONArray);
+            getRecipesTitlesmagesFromArray(recipesJSONArray);
         }
-        else
-            return null;
     }
 
 
@@ -241,26 +243,31 @@ public class Searcher
     }
 
 
-    public HashMap<String, Bitmap> getRecipesTitlesmagesFromArray(JSONArray array)
+    public void getRecipesTitlesmagesFromArray(JSONArray array)
     {
-        HashMap<String, Bitmap> result = new HashMap<String, Bitmap>();
+        titleImage = new HashMap<String, Bitmap>();
         try
         {
             for (int i = 0; i < array.length(); i++)
             {
                 JSONObject recipe = array.getJSONObject(i);
                 String title = recipe.getString("title");
-                Bitmap tmp = new DownloadImageTask().execute(recipe.getString("image")).get();
-                Bitmap scaled = Bitmap.createScaledBitmap(tmp, 50, 50, true);
-                result.put(title, scaled);
+                Bitmap image = new DownloadImageTask().execute(recipe.getString("image")).get();
+                titleImage.put(title, image);
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        return result;
     }
+
+
+    public HashMap<String, Bitmap> getHashMap()
+    {
+        return titleImage;
+    }
+
 
     //metoda zamieniajaca tekst wprowadzony przez uzytkownika do editTextu w taki sposob, aby mozna bylo go dolaczyc do requesta
     public String changeTextToRequest(String text)

@@ -28,22 +28,19 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
-
-    private static final String TAG = MainActivity.class.getSimpleName();
     private GridView gridview;
     Searcher searcher;
-    HashMap<String, Bitmap> results;
     SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searcher = ((MyApplication) this.getApplication()).getSearcher();
-        results = new HashMap<String, Bitmap>();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener()
@@ -82,29 +79,25 @@ public class MainActivity extends AppCompatActivity
                switch (position)
                {
                    case 0:
-                       results = searcher.tagsSearch_TitlesImages("breakfast");
+                       searcher.tagsSearch_TitlesImages("breakfast");
                        break;
                    case 1:
-                       results = searcher.tagsSearch_TitlesImages("dessert");
+                       searcher.tagsSearch_TitlesImages("dessert");
                        break;
                    case 2:
-                       results = searcher.tagsSearch_TitlesImages("fish");
+                       searcher.tagsSearch_TitlesImages("fish");
                        break;
                    case 3:
-                       results = searcher.tagsSearch_TitlesImages("meat");
+                       searcher.tagsSearch_TitlesImages("meat");
                        break;
                    case 4:
-                       results = searcher.tagsSearch_TitlesImages("soup");
+                       searcher.tagsSearch_TitlesImages("soup");
                        break;
                    case 5:
-                       results = searcher.tagsSearch_TitlesImages("vegetarian");
+                       searcher.tagsSearch_TitlesImages("vegetarian");
                        break;
                }
-
                 Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("hashMap", results);
-                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -197,7 +190,9 @@ public class MainActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
         {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            results = searcher.tagsSearch_TitlesImages(query);
+            searcher.tagsSearch_TitlesImages(query);
+            Intent intent2 = new Intent(getApplicationContext(), RecipesListView.class);
+            startActivity(intent2);
         }
     }
 
