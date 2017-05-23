@@ -100,6 +100,12 @@ public class MainActivity extends AppCompatActivity
                        results = searcher.tagsSearch_TitlesImages("vegetarian");
                        break;
                }
+
+                Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("hashMap", results);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
