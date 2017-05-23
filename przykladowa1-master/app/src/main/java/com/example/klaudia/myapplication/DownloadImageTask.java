@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.InputStream;
 import java.net.URL;
 
@@ -17,13 +19,14 @@ import java.net.URL;
 //klasa odpowiedzialna za pobieranie obrazka dania
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 {
+    Bitmap image = null;
+
+
     protected Bitmap doInBackground(String... urls)
     {
         String imageUrl = urls[0];
-        Bitmap image = null;
         try
         {
-
             InputStream in = (InputStream) new URL(imageUrl).getContent();
             image = BitmapFactory.decodeStream(in);
             in.close();
@@ -35,4 +38,5 @@ public class DownloadImageTask extends AsyncTask<String, Void, Bitmap>
 
         return image;
     }
+
 }
