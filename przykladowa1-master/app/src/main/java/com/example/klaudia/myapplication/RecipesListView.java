@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class RecipesListView extends AppCompatActivity {
 
@@ -32,11 +33,31 @@ public class RecipesListView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_list_view);
 
-        setCategory();
+        final Intent intent = getIntent();
+        getList(intent);
+
+//        setCategory();
         setListView();
-        setToolbar();
+//        setToolbar();
 
     }
+
+    private void getList(Intent intent)
+    {
+        Bundle bundle = intent.getExtras();
+        HashMap<String, Bitmap> list = (HashMap<String, Bitmap>) bundle.getSerializable("hashMap");
+        bitmaps = new Bitmap[list.size()];
+        titles = new String[list.size()];
+        int i = 0;
+
+        for (Map.Entry pair : list.entrySet())
+        {
+            titles[i] = pair.getKey().toString();
+            bitmaps[i] = (Bitmap) pair.getValue();
+            i++;
+        }
+    }
+
 
     private void setToolbar(){ //ustawiam toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_list_view);
@@ -65,7 +86,7 @@ public class RecipesListView extends AppCompatActivity {
 
     private void setListView(){ //ustawiam widok listy, odpalam adapter
         recipeList = (ListView) findViewById(R.id.recipes_list_view);
-        collectDataFromHashMapToTable();
+ //       collectDataFromHashMapToTable();
         CustomList adapter = new CustomList(this, titles, bitmaps);
         recipeList.setAdapter(adapter);
         recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -73,7 +94,7 @@ public class RecipesListView extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //na razie wyświetlanie przepisu jako nowa aktywość do pracy nad widokiem, potem będziemy ogarniać fragmenty we fragmencie
                 Intent intent = new Intent(getApplicationContext(), RecipeView.class);
                 intent.putExtra("title", titles[position]);
-         //       intent.putExtra("bitmap", bitmaps[position]);
+                intent.putExtra("bitmap", bitmaps[position]);
                 startActivity(intent);
             }
         });
