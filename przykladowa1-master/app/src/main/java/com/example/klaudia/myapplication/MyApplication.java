@@ -10,6 +10,11 @@ import org.json.JSONArray;
 
 public class MyApplication extends Application
 {
-    JSONArray recipesArray;
+    Searcher searcher = new Searcher();
+
+    public Searcher getSearcher()
+    {
+        return searcher;
+    }
 
 }
