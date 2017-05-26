@@ -22,8 +22,8 @@ public class RecipesListView extends AppCompatActivity {
 
     ListView recipeList;
 
-    String category; //tu będzie przypisana kategoria
-    String key = "category"; //klucz dla kategorii wybranej w gridzie
+    String tag; //tu będzie przypisana kategoria
+    String key = "tag"; //klucz dla kategorii wybranej w gridzie
 
     Bitmap []images;
     String[] titles;
@@ -37,8 +37,8 @@ public class RecipesListView extends AppCompatActivity {
         getList();
 
 //        setCategory();
+        setToolbar();
         setListView();
-//        setToolbar();
 
     }
 
@@ -60,7 +60,8 @@ public class RecipesListView extends AppCompatActivity {
 
     private void setToolbar(){ //ustawiam toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_list_view);
-        toolbar.setTitle(upperCase(category) + " recipes");
+        tag = getIntent().getStringExtra(key);
+        toolbar.setTitle(tag + " recipes");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -79,10 +80,6 @@ public class RecipesListView extends AppCompatActivity {
         return true;
     }
 
-    private String upperCase(String toUpperCase){ //duza literka
-        return toUpperCase.substring(0, 1).toUpperCase() + toUpperCase.substring(1);
-    }
-
     private void setListView(){ //ustawiam widok listy, odpalam adapter
         recipeList = (ListView) findViewById(R.id.recipes_list_view);
  //       collectDataFromHashMapToTable();
@@ -91,8 +88,9 @@ public class RecipesListView extends AppCompatActivity {
         recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //na razie wyświetlanie przepisu jako nowa aktywość do pracy nad widokiem, potem będziemy ogarniać fragmenty we fragmencie
+                // fragment we fragmencie nie przejdzie, ale bez problemu to zadziała z aktywnością tak jak chcemy. Lista nie znika przy powrocie, przejścia są płynne i szybkie.
                 Intent intent = new Intent(getApplicationContext(), RecipeView.class);
-                JSONObject recipeJSONObject = ((MyApplication) getApplication()).getSearcher().getJSONObjectFromArray(position);
+                JSONObject recipeJSONObject = ((MyApplication) getApplication()).getSearcher().getJSONObjectFromArray(position); //!!!wczytuje nie te jsony z listy co są na position
 //                intent.putExtra("title", titles[position]);
 //                intent.putExtra("bitmap", bitmaps[position]);
                 intent.putExtra("recipe", recipeJSONObject.toString());
@@ -100,10 +98,6 @@ public class RecipesListView extends AppCompatActivity {
             }
         });
         
-    }
-
-    private void setCategory(){ //ustawiam kategorię
-        category = getIntent().getStringExtra(key);
     }
 
 //    private void collectDataFromHashMapToTable() { //tu mielę z hashmapy na tablice bitmapy i tytulów
