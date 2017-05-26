@@ -1,9 +1,13 @@
 package com.example.klaudia.myapplication;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -36,21 +40,26 @@ public class ImageAdapter extends BaseAdapter{
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int x = size.x/2;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
 
-    //        imageView.setLayoutParams(new GridView.LayoutParams(540, 500));
-    //        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        //    imageView.setLayoutParams(new GridView.LayoutParams(x, x));
+            // imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
        //     imageView.setPadding(0, 0, 0, 0);
         } else {
             imageView = (ImageView) convertView;
         }
         Picasso.with(mContext)
                 .load(mThumbIds[position])
-          //      .resize(600, 600)
+                .resize(x, x)
+
                 .centerCrop()
-                .resize(600,600)
                 .into(imageView);
 
     //    imageView.setImageResource(mThumbIds[position]);
@@ -70,7 +79,6 @@ public class ImageAdapter extends BaseAdapter{
             R.drawable.glutenfree,
             R.drawable.cakes,
             R.drawable.cheap_dishes,
-            R.drawable.polish,
             R.drawable.mexican,
             R.drawable.thai,
             R.drawable.japanese,
@@ -78,4 +86,5 @@ public class ImageAdapter extends BaseAdapter{
             R.drawable.vegan,
             R.drawable.vege
     };
+
 }

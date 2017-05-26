@@ -1,5 +1,6 @@
 package com.example.klaudia.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RecipeView extends AppCompatActivity {
 
@@ -34,17 +38,23 @@ public class RecipeView extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
-
-
-
+    String key = "recipe";
+    private Recipe myRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
 
+        try {
+            myRecipe = new Recipe(new JSONObject(getIntent().getStringExtra(key)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getIntent().getStringExtra("title"));
+
+        toolbar.setTitle(myRecipe.getTitle());
+
         setSupportActionBar(toolbar);
         //toolbar.setTitle(getIntent().getStringExtra("title"));
         // Create the adapter that will return a fragment for each of the three
@@ -64,6 +74,9 @@ public class RecipeView extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                //tutaj ma powstać metoda dodająca przepis do ulubionych
+
             }
         });
 
@@ -163,11 +176,13 @@ public class RecipeView extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Ingredients";
+                {return "Ingredients";}
                 case 1:
                     return "Instruction";
                 case 2:
-                    return "Description";
+                {return "Description";
+
+                }
             }
             return null;
         }
