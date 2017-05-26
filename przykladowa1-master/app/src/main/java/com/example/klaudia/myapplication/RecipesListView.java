@@ -15,6 +15,7 @@ import android.widget.ListView;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,16 +45,19 @@ public class RecipesListView extends AppCompatActivity {
 
     private void getList()
     {
-        HashMap<String, Bitmap> list = ((MyApplication) this.getApplication()).getSearcher().getHashMap();
+        LinkedHashMap<String, Bitmap> list = ((MyApplication) this.getApplication()).getSearcher().getHashMap();
         images = new Bitmap[list.size()];
         titles = new String[list.size()];
-        int i = 0;
+        String [] titles3 = ((MyApplication) getApplication()).getSearcher().titles;
+        Object [] titles2 = list.keySet().toArray();
+
+        int j = 0;
 
         for (Map.Entry pair : list.entrySet())
         {
-            titles[i] = pair.getKey().toString();
-            images[i] = (Bitmap) pair.getValue();
-            i++;
+            titles[j] = pair.getKey().toString();
+            images[j] = (Bitmap) pair.getValue();
+            j++;
         }
     }
 
