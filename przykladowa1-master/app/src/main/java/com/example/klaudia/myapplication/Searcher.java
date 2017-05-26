@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -28,9 +29,17 @@ import java.util.concurrent.ExecutionException;
 public class Searcher
 {
     private JSONArray recipesJSONArray;
-    private HashMap<String, Bitmap> titleImage;
+    String [] titles ;
+    private LinkedHashMap<String, Bitmap> titleImage;
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public void setTitles() throws JSONException
+    {
+        titles = new String [recipesJSONArray.length()];
+        for (int i = 0; i < recipesJSONArray.length(); i++)
+            titles[i] = recipesJSONArray.getJSONObject(i).getString("title");
+
+    }
     //wyszukiwanie przepisu po id
     public Recipe getRecipeById(int id)
     {
@@ -83,7 +92,15 @@ public class Searcher
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
         recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
-        getRecipesTitlesmagesFromArray(recipesJSONArray);
+        try
+        {
+            setTitles();
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        getRecipesTitlesmagesFromArray();
     }
 
 
@@ -100,14 +117,14 @@ public class Searcher
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
-        getRecipesTitlesmagesFromArray(recipesJSONArray);
+        getRecipesTitlesmagesFromArray();
     }
 
     public void similarRecipesSearch_Titles(int id)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
-        getRecipesTitlesmagesFromArray(recipesJSONArray);
+        getRecipesTitlesmagesFromArray();
     }
 
 
@@ -172,7 +189,7 @@ public class Searcher
             userInput = userInput.replace('.', '&');
             String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
             recipesJSONArray = getJsonArrayFromRequest(request, "results");
-            getRecipesTitlesmagesFromArray(recipesJSONArray);
+            getRecipesTitlesmagesFromArray();
         }
     }
 
@@ -243,14 +260,14 @@ public class Searcher
     }
 
 
-    public void getRecipesTitlesmagesFromArray(JSONArray array)
+    public void getRecipesTitlesmagesFromArray()
     {
-        titleImage = new HashMap<String, Bitmap>();
+        titleImage = new LinkedHashMap<String, Bitmap>();
         try
         {
-            for (int i = 0; i < array.length(); i++)
+            for (int i = 0; i < recipesJSONArray.length(); i++)
             {
-                JSONObject recipe = array.getJSONObject(i);
+                JSONObject recipe = recipesJSONArray.getJSONObject(i);
                 String title = recipe.getString("title");
                 Bitmap image = new DownloadImageTask().execute(recipe.getString("image")).get();
                 titleImage.put(title, image);
@@ -263,7 +280,7 @@ public class Searcher
     }
 
 
-    public HashMap<String, Bitmap> getHashMap()
+    public LinkedHashMap<String, Bitmap> getHashMap()
     {
         return titleImage;
     }
