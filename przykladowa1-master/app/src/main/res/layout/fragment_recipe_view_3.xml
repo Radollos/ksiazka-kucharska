@@ -1,6 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_marginTop="-15dp"
+
+    android:id="@+id/fragment_3">
+
+    <View
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white"/>
+
+
+    <ImageView
+        android:id="@+id/image_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+         />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+
+        android:gravity="fill_vertical"
+        android:text="Cooking time: "
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:paddingLeft="8dp"
+        android:layout_below="@+id/preparation_time"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/cooking_time"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+
+        android:gravity="fill_vertical"
+        android:text="Cooking time: "
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:paddingLeft="8dp"
+        android:layout_below="@+id/preparation_time"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/preparation_time"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:paddingLeft="8dp"
+
+        android:gravity="fill_vertical"
+        android:text="Preparation time: "
+        android:textAlignment="gravity"
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:layout_below="@+id/image_recipe"
+        android:layout_alignParentStart="true"
+
+        android:layout_toStartOf="@+id/cooking_time"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textAlignment="gravity"
+        android:gravity="fill_vertical"
+        android:text="Price: "
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:paddingLeft="8dp"
+        android:layout_below="@+id/servings"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/servings"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textAlignment="gravity"
+        android:gravity="fill_vertical"
+        android:text="Servings: "
+        android:textAllCaps="false"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:paddingLeft="8dp"
+
+        android:layout_below="@+id/cooking_time"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
 
 </LinearLayout>
+</ScrollView>
