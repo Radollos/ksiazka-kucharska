@@ -10,7 +10,7 @@ import org.json.JSONArray;
 
 public class MyApplication extends Application
 {
-    Searcher searcher = new Searcher();
+  Searcher searcher = new Searcher();
 
     public Searcher getSearcher()
     {
