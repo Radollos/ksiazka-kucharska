@@ -1,43 +1,25 @@
 package com.example.klaudia.myapplication;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.database.DataSetObserver;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 
-public class RecipeView extends AppCompatActivity {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
+public class RecipeView extends AppCompatActivity
+{
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -48,20 +30,27 @@ public class RecipeView extends AppCompatActivity {
     private String key = "recipe";
     protected Recipe myRecipe;
 
+    JSONObject myJSON = null;
+    String jsonReference = null;
+    FragmentManager manager;
+    FragmentTransaction transaction;
+    PagerAdapter adapter;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
 
-        JSONObject myJSON = null;
-        String jsonReference = null;
-
         jsonReference = getIntent().getStringExtra(key);
-        try {
+        try
+        {
             myJSON = new JSONObject(jsonReference);
             myRecipe = new Recipe(myJSON);
-        } catch (JSONException e) {
+        }
+        catch (JSONException e)
+        {
             e.printStackTrace();
         }
 
@@ -83,9 +72,11 @@ public class RecipeView extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
@@ -94,36 +85,39 @@ public class RecipeView extends AppCompatActivity {
             }
         });
 
+        adapter = new PagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(adapter);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-
     }
+
 
     public Recipe getMyRecipe(){
         return myRecipe;
     }
 
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_recipe_view, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case android.R.id.home:
                 finish();
                 return true;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -137,27 +131,26 @@ public class RecipeView extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
+    public class SectionsPagerAdapter extends FragmentPagerAdapter
+    {
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {
-            switch (position){
+        public android.support.v4.app.Fragment getItem(int position)
+        {
+            switch (position)
+            {
                 case 0:
-                    RecipeView1 tab1 = new RecipeView1();
-                    return tab1;
+                    return adapter.getItem(0);
                 case 1:
-                    RecipeView2 tab2 = new RecipeView2();
-                    return tab2;
+                    return adapter.getItem(1);
                 case 2:
-                    RecipeView3 tab3 = new RecipeView3();
-                    return tab3;
+                    return adapter.getItem(2);
                 default:
                     return null;
-
             }
 
         }
@@ -175,13 +168,11 @@ public class RecipeView extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                {return "Ingredients";}
+                    return "Ingredients";
                 case 1:
                     return "Instruction";
                 case 2:
-                {return "Description";
-
-                }
+                    return "Description";
             }
             return null;
         }

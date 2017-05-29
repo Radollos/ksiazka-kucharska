@@ -68,7 +68,7 @@ public class Recipe
         lowFodmap = json.getBoolean("lowFodmap");
         ketogenic = json.getBoolean("ketogenic");
         whole30 = json.getBoolean("whole30");
-        servings = json.getInt("servings");
+        servings = json.has("servings") ? json.getInt("servings") : 0;
         preparationMinutes = json.has("preparationMinutes") ? json.getInt("preparationMinutes") : 0;
         cookingMinutes = json.has("cookingMinutes") ? json.getInt("cookingMinutes") : 0;
         sourceUrl = json.getString("sourceUrl");
