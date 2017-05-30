@@ -1,5 +1,6 @@
 package com.example.klaudia.myapplication;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -29,36 +30,8 @@ import java.util.concurrent.ExecutionException;
 public class Searcher
 {
     private JSONArray recipesJSONArray;
-    String [] titles ;
-    private LinkedHashMap<String, Bitmap> titleImage;
+    private LinkedHashMap<String, String> titleUrl;
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    public void setTitles() throws JSONException
-    {
-        titles = new String [recipesJSONArray.length()];
-        for (int i = 0; i < recipesJSONArray.length(); i++)
-            titles[i] = recipesJSONArray.getJSONObject(i).getString("title");
-
-    }
-    //wyszukiwanie przepisu po id
-    public Recipe getRecipeById(int id)
-    {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/information?includeNutrition=false";
-        JsonNode response = null;
-        Recipe result = null;
-        //wysylamy zapytanie do bazy za pomoca obiektu klasy ConnectionManager. Metoda execute(request).get().getBody() zwraca nam JsonNoda - wynik polaczenia z baza
-        try
-        {
-            response = (JsonNode) new ConnectionManager().execute(request).get().getBody();
-            result = new Recipe(response.getObject());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-       return result;
-    }
 
 
     public JSONObject getRecipeJSONObjectById(int id)
@@ -69,7 +42,7 @@ public class Searcher
 
         try
         {
-            response = (JsonNode) new ConnectionManager().execute(request).get().getBody();
+            response = new ConnectionManager().execute(request).get().getBody();
             result = response.getObject();
         }
         catch (Exception e)
@@ -80,70 +53,33 @@ public class Searcher
         return result;
     }
 
-    //wyszukiwanie przepisow po tagach
-    public JSONArray tagsSearch (String text)
+
+    public void tagsSearch_TitlesUrls(String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
         recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
-        return recipesJSONArray;
+        getRecipesTitleUrlFromArray();
     }
 
-    public void tagsSearch_TitlesImages (String text)
-    {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
-        recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
-        try
-        {
-            setTitles();
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-        getRecipesTitlesmagesFromArray();
-    }
-
-
-    //wyszukiwanie przepisow po skladnikach
-    public JSONArray ingredientsSearch(String text)
-    {
-        HashMap<String, ImageView> result = new HashMap<String, ImageView>();
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
-        recipesJSONArray = getJsonArrayFromRequest(request, "");
-        return recipesJSONArray;
-    }
 
     public void ingredientsSearch_TitlesImages(String text)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
-        getRecipesTitlesmagesFromArray();
+        getRecipesTitleUrlFromArray();
     }
 
     public void similarRecipesSearch_Titles(int id)
     {
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
-        getRecipesTitlesmagesFromArray();
+        getRecipesTitleUrlFromArray();
     }
 
 
-    //wysztkiwanie podobnych przepisow
-    public JSONArray similarRecipesSearch(int id)
+    public void complexSearch_Titles(HashMap<String, String> nameValue)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
-        recipesJSONArray = getJsonArrayFromRequest(request, "");
-        return recipesJSONArray;
-    }
-
-
-
-
-    //wyszukiwanie zaawansowane
-    //nazwy kluczy musza miec konstrkucje : a_nazwa, gdzie a to pierwsza litera typu danych, a nazwa to IDENTYCZNA nazwa pola jak w bazie danych
-    public JSONArray complexSearch(HashMap<String, String> nameValue)
-    {
-        String result = "";
+        String userInput = "";
         Iterator it = nameValue.entrySet().iterator();
         while (it.hasNext())
         {
@@ -151,46 +87,17 @@ public class Searcher
             Object key = pair.getKey();
             Object value = pair.getValue();
 
-            //nie zapisujemy do resulta 2 poczatkowych liter klucza, czyli litery oznaczej typ danej i '_'. Kropka sluzy do oddzielenia pary (klucz, wartosc)
-            if (key.toString() != "s_query" && value != null)
-                result += key.toString().substring(2, key.toString().length()) + "=" + value + ".";
+            //Kropka sluzy do oddzielenia pary (klucz, wartosc)
+            userInput += key.toString() + "=" + value + ".";
         }
 
-        if (result.length() > 0 && result.charAt(result.length()-1) == '.')
-            result = result.substring(0, result.length() - 1);
+        if (userInput.length() > 0 && userInput.charAt(userInput.length()-1) == '.')
+            userInput = userInput.substring(0, userInput.length() - 1);
 
-        result = result.replace('.', '&');
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(result);
+        userInput = userInput.replace('.', '&');
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
         recipesJSONArray = getJsonArrayFromRequest(request, "results");
-        return recipesJSONArray;
-    }
-
-
-    public void complexSearch_Titles(HashMap<String, String> nameValue)
-    {
-        if (checkMapCorrectness(nameValue))
-        {
-            String userInput = "";
-            Iterator it = nameValue.entrySet().iterator();
-            while (it.hasNext())
-            {
-                Map.Entry pair = (Map.Entry) it.next();
-                Object key = pair.getKey();
-                Object value = pair.getValue();
-
-                //nie zapisujemy do resulta 2 poczatkowych liter klucza, czyli litery oznaczej typ danej i '_'. Kropka sluzy do oddzielenia pary (klucz, wartosc)
-                if (key.toString() != "s_query" && value != null)
-                    userInput += key.toString().substring(2, key.toString().length()) + "=" + value + ".";
-            }
-
-            if (userInput.length() > 0 && userInput.charAt(userInput.length()-1) == '.')
-                userInput = userInput.substring(0, userInput.length() - 1);
-
-            userInput = userInput.replace('.', '&');
-            String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
-            recipesJSONArray = getJsonArrayFromRequest(request, "results");
-            getRecipesTitlesmagesFromArray();
-        }
+        getRecipesTitleUrlFromArray();
     }
 
 
@@ -200,7 +107,7 @@ public class Searcher
         JsonNode response = null;
         try
         {
-            response = (JsonNode) new ConnectionManager().execute(request).get().getBody();
+            response = new ConnectionManager().execute(request).get().getBody();
             //w bazie tablice z przepisami sa roznie zapisane - nazywaja sie "results" albo "recipes" albo nie maja nazwy. Po to jest zmienna jsonArrayName, ktora oznacza jak
             //zapisana jest tabela w JSONie. Inaczej wyciaga sie dane z tabeli, ktora ma nazwe i ktora jej nie ma
             if (jsonArrayName != "")
@@ -214,27 +121,6 @@ public class Searcher
             e.printStackTrace();
         }
         return recipesJSONArray;
-    }
-
-
-    //funkcja zamieniaja tablica JSONArray na tablice przepisow
-    public Recipe [] getRecipesFromArray(JSONArray array)
-    {
-        Recipe [] recipes = null;
-        try
-        {
-            recipes = new Recipe[array.length()];
-            for (int i = 0; i < array.length(); i++)
-            {
-                Recipe recipe = getRecipeById(array.getJSONObject(i).getInt("id"));
-                recipes[i] = recipe;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return recipes;
     }
 
 
@@ -259,18 +145,17 @@ public class Searcher
         return result;
     }
 
-
-    public void getRecipesTitlesmagesFromArray()
+    public void getRecipesTitleUrlFromArray()
     {
-        titleImage = new LinkedHashMap<String, Bitmap>();
+        titleUrl = new LinkedHashMap<String, String>();
         try
         {
             for (int i = 0; i < recipesJSONArray.length(); i++)
             {
                 JSONObject recipe = recipesJSONArray.getJSONObject(i);
                 String title = recipe.getString("title");
-                Bitmap image = new DownloadImageTask().execute(recipe.getString("image")).get();
-                titleImage.put(title, image);
+                String url = recipe.getString("image");
+                titleUrl.put(title, url);
             }
         }
         catch(Exception e)
@@ -280,11 +165,10 @@ public class Searcher
     }
 
 
-    public LinkedHashMap<String, Bitmap> getHashMap()
+    public LinkedHashMap<String, String> getHashMapURL()
     {
-        return titleImage;
+        return titleUrl;
     }
-
 
     //metoda zamieniajaca tekst wprowadzony przez uzytkownika do editTextu w taki sposob, aby mozna bylo go dolaczyc do requesta
     public String changeTextToRequest(String text)
@@ -333,7 +217,7 @@ public class Searcher
                 break;
 
             default:
-               break;
+                break;
         }
         return correct;
     }
@@ -341,7 +225,7 @@ public class Searcher
 
     public boolean isBoolean(String value)
     {
-       return (value.equals("true") || value.equals("false"));
+        return (value.equals("true") || value.equals("false"));
     }
 
 

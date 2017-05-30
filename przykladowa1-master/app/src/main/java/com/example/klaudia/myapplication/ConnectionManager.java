@@ -1,5 +1,7 @@
 package com.example.klaudia.myapplication;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -15,7 +17,6 @@ import org.json.JSONObject;
 public class ConnectionManager extends AsyncTask<String, Void, HttpResponse<JsonNode>>
 {
     JsonNode jsonResponse;
-
     public ConnectionManager()
     {
         jsonResponse = null;
@@ -23,7 +24,10 @@ public class ConnectionManager extends AsyncTask<String, Void, HttpResponse<Json
 
 
     @Override
-    protected void onPreExecute() { }
+    protected void onPreExecute()
+    {
+
+    }
 
     @Override
     protected HttpResponse<JsonNode> doInBackground(String... params)
