@@ -1,5 +1,7 @@
 package com.example.klaudia.myapplication;
+import android.app.ActivityOptions;
 import android.content.res.Configuration;
+import android.text.Layout;
 import android.util.Log;
 
 import android.app.SearchManager;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private GridView gridview;
     Searcher searcher;
     SearchView searchView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle (
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -210,6 +213,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
+        Intent i;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -219,16 +223,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_slideshow)
         {
-            Intent i = new Intent(this, ComplexSearch.class);
+            i = new Intent(this, ComplexSearch.class);
             startActivity(i);
 
         } else if (id == R.id.nav_manage) {
 
         }
-        else if (id == R.id.show_recipe) {
-            Intent intent = new Intent(this, RecipeView.class);
-            startActivity(intent);
-        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -254,4 +255,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void backToMainView(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        startActivity(intent);
+    }
 }
