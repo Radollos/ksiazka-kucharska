@@ -132,19 +132,21 @@ public class RecipeView extends AppCompatActivity {
 //        return toUpperCase.substring(0, 1).toUpperCase() + toUpperCase.substring(1);
 //    }
 
+
    //usunieto statyczny placeholder - gowno straszne, nie pozdrawiam
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+       public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
-        public Fragment getItem(int position) {
+  public Fragment getItem(int position) {
             switch (position){
                 case 0:
                     RecipeView1 tab1 = new RecipeView1();
@@ -186,4 +188,5 @@ public class RecipeView extends AppCompatActivity {
             return null;
         }
     }
+
 }

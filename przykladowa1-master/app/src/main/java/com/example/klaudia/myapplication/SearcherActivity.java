@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.klaudia.*;
 //import sharedpreference.utils.SharedPreference;
@@ -22,12 +23,14 @@ public class SearcherActivity extends Activity {
 
     // References
     private EditText textEtxt;
+
     private Button saveButton;
     private Button activity2Button;
 
     private String text;
     private SharedPreference sharedPreference;
     Activity context = this;
+
 
 
     @Override

@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.klaudia.*;
 
 import java.util.ArrayList;
 
@@ -19,6 +22,8 @@ public class SecondActivity extends Activity {
     private String text;
     private SharedPreference sharedPreference;
     Activity context = this;
+
+
 
 
     /*
@@ -37,9 +42,9 @@ public class SecondActivity extends Activity {
 
 
         //get value form ShPr
+
         ArrayList<String> noteList = new ArrayList<String>(sharedPreference.getNotes(context));
         StringBuilder stringBuilder = new StringBuilder();
-
         for(int i = 0; i < noteList.size(); i++)
             stringBuilder.append("\n" + noteList.get(i));
         textTxt.setText(stringBuilder.toString());
@@ -58,10 +63,29 @@ public class SecondActivity extends Activity {
         textTxt = (TextView) findViewById(R.id.txt_text);
     }
 
+    //opcjonalnie
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+       String stateSaved = savedInstanceState.getString(textTxt.toString());
+        if (stateSaved==null){
+            Toast.makeText(SecondActivity.this, "No favourites", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(SecondActivity.this, "No favourites", Toast.LENGTH_LONG).show();
+        }
+        textTxt.setText(textTxt.toString());
+    }
+
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         String text = textTxt.getText().toString();
+
+        // optionally
+        savedInstanceState.putString("favourites", text);
+        Toast.makeText(SecondActivity.this, text, Toast.LENGTH_LONG).show();
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
