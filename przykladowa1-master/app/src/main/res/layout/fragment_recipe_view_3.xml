@@ -32,18 +32,18 @@
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
 
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/preparation_time"
         android:gravity="fill_vertical"
+        android:paddingLeft="8dp"
         android:text="Cooking time: "
         android:textAlignment="gravity"
         android:textAllCaps="false"
         android:textColor="@android:color/background_dark"
-        android:textSize="18sp"
-        android:paddingLeft="8dp"
-        android:layout_below="@+id/preparation_time"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/cooking_time"
