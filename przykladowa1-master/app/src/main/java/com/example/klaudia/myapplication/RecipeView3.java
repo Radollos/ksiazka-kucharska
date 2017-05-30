@@ -50,8 +50,7 @@ public class RecipeView3 extends Fragment {
         TextView servings = (TextView) rootView.findViewById(R.id.servings);
 
         name.setText("Name: " + myRecipe.getTitle());
-        preparation.setText("Preparation: " + myRecipe.getPricePerServing() + " min");
-        cooking.setText("Cooking: " + myRecipe.getCookingMinutes() + " min");
+        preparation.setText("Preparation: " + myRecipe.getReadyInMinutes() + " min");        cooking.setText("Cooking: " + myRecipe.getCookingMinutes() + " min");
         servings.setText("Price per servings: " + myRecipe.getPricePerServing() + "$"); //zamieniona treść cooking z servings, bo nie chciało mi się przemieszczać textview w xmlu.
 
         price.setText("Servings: " + myRecipe.getServings());
