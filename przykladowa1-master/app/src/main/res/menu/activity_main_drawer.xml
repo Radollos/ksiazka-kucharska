@@ -22,12 +22,6 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
-
-        <item
-            android:id="@+id/show_recipe"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Recipe View in progress" />
-
     </group>
 
 
