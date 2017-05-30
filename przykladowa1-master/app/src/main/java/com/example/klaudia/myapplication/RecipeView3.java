@@ -1,74 +1,114 @@
 package com.example.klaudia.myapplication;
 
-
-import android.content.Intent;
-import android.os.Bundle;
+import android.media.Image;
 import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
+import static com.example.klaudia.myapplication.R.layout.linearlayout_row_details;
+import static com.example.klaudia.myapplication.R.layout.listview_row_ingredient;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Created by Slawcio on 2017-05-27.
  */
-public class RecipeView3 extends Fragment
-{
-    Recipe recipe;
-    ImageView imageRecipe;
-    TextView name;
-    TextView cookingTime;
-    TextView preparationTime;
-    TextView price;
-    TextView servings;
 
+public class RecipeView3 extends Fragment {
 
-    public RecipeView3()
-    {
-        // Required empty public constructor
-    }
-
+    private ViewGroup fragmentLayout;
+    private Boolean[] detailsBoolean;
+    private String[] details;
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        recipe = ((RecipeView) getActivity()).myRecipe;
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Recipe myRecipe = null;
+        RecipeView mainRecipeView = (RecipeView) getActivity();
+        myRecipe = mainRecipeView.getMyRecipe();
 
+
+
+        View rootView = inflater.inflate(R.layout.fragment_recipe_view_3, container, false);
+
+        fragmentLayout = (ViewGroup)  rootView.findViewById(R.id.fragment_3);
+
+        ImageView imageRecipe = (ImageView) rootView.findViewById(R.id.image_recipe);
+        Picasso.with(getActivity()).load(myRecipe.getImage()).into(imageRecipe);
+
+        TextView name = (TextView) rootView.findViewById(R.id.name);
+        TextView preparation = (TextView) rootView.findViewById(R.id.preparation_time);
+        TextView cooking = (TextView) rootView.findViewById(R.id.cooking_time);
+        TextView price = (TextView) rootView.findViewById(R.id.price);
+        TextView servings = (TextView) rootView.findViewById(R.id.servings);
+
+        name.setText("Name: " + myRecipe.getTitle());
+        preparation.setText("Preparation: " + myRecipe.getPricePerServing() + " min");
+        cooking.setText("Cooking: " + myRecipe.getCookingMinutes() + " min");
+        servings.setText("Price per servings: " + myRecipe.getPricePerServing() + "$"); //zamieniona treść cooking z servings, bo nie chciało mi się przemieszczać textview w xmlu.
+
+        price.setText("Servings: " + myRecipe.getServings());
+
+        details = new String[]{
+                "Vegetarian",
+                "Vegan",
+                "Gluten-free",
+                "Dairy-free",
+                "Very healty",
+                "Cheap",
+                "Sustainable",
+                "Low fodmap",
+                "Ketogenic"
+        };
+
+       detailsBoolean = new Boolean[]{
+               myRecipe.isVegetarian(),
+               myRecipe.isVegan(),
+               myRecipe.isGlutenFree(),
+               myRecipe.isDairyFree(),
+               myRecipe.isVeryHealthy(),
+               myRecipe.isCheap(),
+               myRecipe.isSustainable(),
+               myRecipe.isLowFodmap(),
+               myRecipe.isKetogenic()
+       };
+
+
+
+//        ListView listDetails = (ListView) rootView.findViewById(R.id.detail_list);
+//        listDetails.setAdapter(new CustomListDetails(getActivity(), details, detailsBoolean));
+
+        for(int i = 0; i < details.length; i++){
+            addLayout(i);
+        }
+        return rootView;
     }
 
+    private void addLayout(int position) {
+        View row = LayoutInflater.from(getActivity()).inflate(linearlayout_row_details, fragmentLayout, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.fragment_recipe_view_3, container, false);
-        imageRecipe = (ImageView) view.findViewById(R.id.image_recipe);
-        name = (TextView) view.findViewById(R.id.name);
-        cookingTime = (TextView) view.findViewById(R.id.cooking_time);
-        preparationTime = (TextView) view.findViewById(R.id.preparation_time);
-        price = (TextView) view.findViewById(R.id.price);
-        servings = (TextView) view.findViewById(R.id.servings);
 
-        Picasso.with(getContext()).load(recipe.getImage()).into(imageRecipe);
-        name.setText("Name: " + recipe.getTitle());
-        //TODO zamienic czas przygotowywania na godziny + minuty
-        cookingTime.setText("Cooking time: " + recipe.getCookingMinutes() + " minutes");
-        preparationTime.setText("Prepearation time: " + recipe.getPreparationMinutes() + " minutes");
-        //TODO sprawdzic walute
-        price.setText(String.valueOf("Price for serving: " + recipe.getPricePerServing() + "$"));
+        TextView textView = (TextView) row.findViewById(R.id.txt);
+        ImageView imageView = (ImageView) row.findViewById(R.id.img);
+        textView.setText(details[position]);
+        Picasso.with(getContext()).load(
+                (detailsBoolean[position]) ? R.drawable.checked : R.drawable.rejected
+        ).
+                resize(100, 100).
+                centerCrop().
+                into(imageView);
 
-        servings.setText("Servings: " + String.valueOf(recipe.getServings()));
 
-        return view;
+
+
+        fragmentLayout.addView(row);
     }
-
-
 
 }
