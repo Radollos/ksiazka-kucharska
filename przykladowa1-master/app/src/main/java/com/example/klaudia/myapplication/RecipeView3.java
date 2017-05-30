@@ -68,17 +68,17 @@ public class RecipeView3 extends Fragment {
                 "Ketogenic"
         };
 
-       detailsBoolean = new Boolean[]{
-               myRecipe.isVegetarian(),
-               myRecipe.isVegan(),
-               myRecipe.isGlutenFree(),
-               myRecipe.isDairyFree(),
-               myRecipe.isVeryHealthy(),
-               myRecipe.isCheap(),
-               myRecipe.isSustainable(),
-               myRecipe.isLowFodmap(),
-               myRecipe.isKetogenic()
-       };
+        detailsBoolean = new Boolean[]{
+                myRecipe.isVegetarian(),
+                myRecipe.isVegan(),
+                myRecipe.isGlutenFree(),
+                myRecipe.isDairyFree(),
+                myRecipe.isVeryHealthy(),
+                myRecipe.isCheap(),
+                myRecipe.isSustainable(),
+                myRecipe.isLowFodmap(),
+                myRecipe.isKetogenic()
+        };
 
 
 
