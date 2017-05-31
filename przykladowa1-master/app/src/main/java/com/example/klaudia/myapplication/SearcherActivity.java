@@ -7,6 +7,7 @@ package com.example.klaudia.myapplication;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -49,7 +50,9 @@ public class SearcherActivity extends Activity {
                 text = textEtxt.getText().toString();
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(textEtxt.getWindowToken(), 0);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.CUPCAKE) {
+                    imm.hideSoftInputFromWindow(textEtxt.getWindowToken(), 0);
+                }
 
                 // save to ShPr
                 sharedPreference.saveNote(context, text);

@@ -7,7 +7,18 @@ package com.example.klaudia.myapplication;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.preference.PreferenceManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+
+import java.lang.reflect.Type;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,22 +28,35 @@ public class SharedPreference {
     public static final String PREFS_NAME = "AOP_PREFS";
     public static final String PREFS_KEY = "AOP_PREFS_String";
 
+   // Activity context = this;
+
+
     public SharedPreference() {
         super();
     }
+
+//json objects
+    // objects
+
+
+
 
 
     public void saveNote(Context context, String text) {
 
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
+        Editor editor = settings.edit();
         // Get existing notes
         Set<String> notes = getNotes(context); // this.context
         // Add new note to existing notes
         notes.add(text);
         // Store notes to SharedPreferences
-        editor.putStringSet(PREFS_KEY, notes);
-        editor.apply();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            editor.putStringSet(PREFS_KEY, notes);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            editor.apply();
+        }
     }
 
     public Set<String> getNotes(Context context) {
@@ -40,7 +64,10 @@ public class SharedPreference {
         SharedPreferences settings = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         // Get notes
-        Set<String> notes = settings.getStringSet(PREFS_KEY, new HashSet<String>());
+        Set<String> notes = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            notes = settings.getStringSet(PREFS_KEY, new HashSet<String>());
+        }
 
         return notes;
     }
