@@ -1,5 +1,7 @@
 package com.example.klaudia.myapplication;
+import android.app.ActivityOptions;
 import android.content.res.Configuration;
+import android.text.Layout;
 import android.util.Log;
 
 import android.app.SearchManager;
@@ -24,7 +26,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private GridView gridview;
     Searcher searcher;
     SearchView searchView;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,18 +48,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         searcher = ((MyApplication) this.getApplication()).getSearcher();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle (
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -80,77 +74,77 @@ public class MainActivity extends AppCompatActivity
                 int idChosen = ImageAdapter.getReferences(position);
                 String tag = "";
                 switch (idChosen)
-               {
-                   case R.drawable.breakfast:
-                       searcher.tagsSearch_TitlesImages("breakfast");
-                       tag = "Breakfast";
-                       break;
-                   case R.drawable.dessert:
-                       tag = "Dessert";
-                       searcher.tagsSearch_TitlesImages("dessert");
-                       break;
-                   case R.drawable.fish:
-                       tag = "Fish";
-                       searcher.tagsSearch_TitlesImages("fish");
-                       break;
-                   case R.drawable.meat:
-                       tag = "Meat";
-                       searcher.tagsSearch_TitlesImages("meat");
-                       break;
-                   case R.drawable.soup:
-                       tag = "Soup";
-                       searcher.tagsSearch_TitlesImages("soup");
-                       break;
-                   case R.drawable.vege:
-                       tag = "Vege";
-                       searcher.tagsSearch_TitlesImages("vegetarian");
-                       break;
-                   case R.drawable.cakes:
-                       tag = "Cake";
-                       searcher.tagsSearch_TitlesImages("cake");
-                       break;
-                   case R.drawable.drinks:
-                       tag = "Drink";
-                       searcher.tagsSearch_TitlesImages("drink");
-                       break;
-                   case R.drawable.flour_dishes:
-                       tag = "Flour dishes";
-                       searcher.tagsSearch_TitlesImages("flour");
-                       break;
-                   case R.drawable.glutenfree:
-                       tag = "Gluten-free";
-                       searcher.tagsSearch_TitlesImages("gluten free");
-                       break;
-                   case R.drawable.italian:
-                       tag = "Italian";
-                       searcher.tagsSearch_TitlesImages("italian");
-                       break;
-                   case R.drawable.japanese:
-                       tag = "Japanese";
-                       searcher.tagsSearch_TitlesImages("japanese");
-                       break;
-                   case R.drawable.mexican:
-                       tag = "Mexican";
-                       searcher.tagsSearch_TitlesImages("mexican");
-                       break;
-                   case R.drawable.salad:
-                       tag = "Salad";
-                       searcher.tagsSearch_TitlesImages("salad");
-                       break;
-                   case R.drawable.thai:
-                       tag = "Thai";
-                       searcher.tagsSearch_TitlesImages("thai");
-                       break;
-                   case R.drawable.vegan:
-                       tag = "Vegan";
-                       searcher.tagsSearch_TitlesImages("vegan");
-                       break;
-     //              case R.drawable.polish:
-     //                  searcher.tagsSearch_TitlesImages("polish"); //chyba brak polskiej kuchni ^^
-                   case R.drawable.cheap_dishes:
-                       tag = "Cheap meal";
-                       searcher.tagsSearch_TitlesImages("cheap"); //trza jakoś inaczej skonstruować wyszukiwanie po taniości
-               }
+                {
+                    case R.drawable.breakfast:
+                        searcher.tagsSearch_TitlesUrls("breakfast");
+                        tag = "Breakfast";
+                        break;
+                    case R.drawable.dessert:
+                        tag = "Dessert";
+                        searcher.tagsSearch_TitlesUrls("dessert");
+                        break;
+                    case R.drawable.fish:
+                        tag = "Fish";
+                        searcher.tagsSearch_TitlesUrls("fish");
+                        break;
+                    case R.drawable.meat:
+                        tag = "Meat";
+                        searcher.tagsSearch_TitlesUrls("meat");
+                        break;
+                    case R.drawable.soup:
+                        tag = "Soup";
+                        searcher.tagsSearch_TitlesUrls("soup");
+                        break;
+                    case R.drawable.vege:
+                        tag = "Vege";
+                        searcher.tagsSearch_TitlesUrls("vegetarian");
+                        break;
+                    case R.drawable.cakes:
+                        tag = "Cake";
+                        searcher.tagsSearch_TitlesUrls("cake");
+                        break;
+                    case R.drawable.drinks:
+                        tag = "Drink";
+                        searcher.tagsSearch_TitlesUrls("drink");
+                        break;
+                    case R.drawable.flour_dishes:
+                        tag = "Flour dishes";
+                        searcher.tagsSearch_TitlesUrls("flour");
+                        break;
+                    case R.drawable.glutenfree:
+                        tag = "Gluten-free";
+                        searcher.tagsSearch_TitlesUrls("gluten free");
+                        break;
+                    case R.drawable.italian:
+                        tag = "Italian";
+                        searcher.tagsSearch_TitlesUrls("italian");
+                        break;
+                    case R.drawable.japanese:
+                        tag = "Japanese";
+                        searcher.tagsSearch_TitlesUrls("japanese");
+                        break;
+                    case R.drawable.mexican:
+                        tag = "Mexican";
+                        searcher.tagsSearch_TitlesUrls("mexican");
+                        break;
+                    case R.drawable.salad:
+                        tag = "Salad";
+                        searcher.tagsSearch_TitlesUrls("salad");
+                        break;
+                    case R.drawable.thai:
+                        tag = "Thai";
+                        searcher.tagsSearch_TitlesUrls("thai");
+                        break;
+                    case R.drawable.vegan:
+                        tag = "Vegan";
+                        searcher.tagsSearch_TitlesUrls("vegan");
+                        break;
+                    //              case R.drawable.polish:
+                    //                  searcher.tagsSearch_TitlesImages("polish"); //chyba brak polskiej kuchni ^^
+                    case R.drawable.cheap_dishes:
+                        tag = "Cheap meal";
+                        searcher.tagsSearch_TitlesUrls("cheap"); //trza jakoś inaczej skonstruować wyszukiwanie po taniości
+                }
                 Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
                 intent.putExtra("tag", tag);
                 startActivity(intent);
@@ -208,6 +202,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
+        Intent i;
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -215,17 +210,14 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_slideshow)
+        {
+            i = new Intent(this, ComplexSearch.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_manage) {
 
         }
-        else if (id == R.id.show_recipe) {
-            Intent intent = new Intent(this, RecipeView.class);
-            startActivity(intent);
-        }
-//
-//        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -245,11 +237,16 @@ public class MainActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
         {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            searcher.tagsSearch_TitlesImages(query);
+            searcher.tagsSearch_TitlesUrls(query);
             Intent intent2 = new Intent(getApplicationContext(), RecipesListView.class);
             startActivity(intent2);
         }
     }
 
 
+    public void backToMainView(View view) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        startActivity(intent);
+    }
 }

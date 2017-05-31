@@ -9,15 +9,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
-
 import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
+
 
 public class RecipesListView extends AppCompatActivity {
 
@@ -26,18 +24,17 @@ public class RecipesListView extends AppCompatActivity {
     String tag; //tu będzie przypisana kategoria
     String key = "tag"; //klucz dla kategorii wybranej w gridzie
 
-    Bitmap []images;
     String[] titles;
+    String[] urls;
 
     Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_list_view);
         getList();
-
-//        setCategory();
         setToolbar();
         setListView();
 
@@ -45,18 +42,16 @@ public class RecipesListView extends AppCompatActivity {
 
     private void getList()
     {
-        LinkedHashMap<String, Bitmap> list = ((MyApplication) this.getApplication()).getSearcher().getHashMap();
-        images = new Bitmap[list.size()];
+        LinkedHashMap<String, String> list = ((MyApplication) this.getApplication()).getSearcher().getHashMapURL();
         titles = new String[list.size()];
-        String [] titles3 = ((MyApplication) getApplication()).getSearcher().titles;
-        Object [] titles2 = list.keySet().toArray();
+        urls = new String[list.size()];
 
         int j = 0;
 
         for (Map.Entry pair : list.entrySet())
         {
             titles[j] = pair.getKey().toString();
-            images[j] = (Bitmap) pair.getValue();
+            urls[j] = pair.getValue().toString();
             j++;
         }
     }
@@ -86,8 +81,8 @@ public class RecipesListView extends AppCompatActivity {
 
     private void setListView(){ //ustawiam widok listy, odpalam adapter
         recipeList = (ListView) findViewById(R.id.recipes_list_view);
- //       collectDataFromHashMapToTable();
-        CustomList adapter = new CustomList(this, titles, images);
+        //       CustomList adapter = new CustomList(this, titles, images);
+        CustomList adapter = new CustomList(this, titles, urls);
         recipeList.setAdapter(adapter);
         recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,29 +90,12 @@ public class RecipesListView extends AppCompatActivity {
                 // fragment we fragmencie nie przejdzie, ale bez problemu to zadziała z aktywnością tak jak chcemy. Lista nie znika przy powrocie, przejścia są płynne i szybkie.
                 Intent intent = new Intent(getApplicationContext(), RecipeView.class);
                 JSONObject recipeJSONObject = ((MyApplication) getApplication()).getSearcher().getJSONObjectFromArray(position); //!!!wczytuje nie te jsony z listy co są na position
-//                intent.putExtra("title", titles[position]);
-//                intent.putExtra("bitmap", bitmaps[position]);
                 intent.putExtra("recipe", recipeJSONObject.toString());
                 startActivity(intent);
             }
         });
-        
-    }
 
-//    private void collectDataFromHashMapToTable() { //tu mielę z hashmapy na tablice bitmapy i tytulów
-//        Searcher search = new Searcher();
-//        data = search.tagsSearch_TitlesImages(category);
-//        int size = data.size();
-//        titles = new String[size];
-//        bitmaps = new Bitmap[size];
-//        int index = 0;
-//        for (Map.Entry<String, Bitmap> entry : data.entrySet()) {
-//            titles[index] = entry.getKey();
-//            bitmaps[index] = entry.getValue();
-//            index++;
-//        }
-//
-//    }
+    }
 
 
 }

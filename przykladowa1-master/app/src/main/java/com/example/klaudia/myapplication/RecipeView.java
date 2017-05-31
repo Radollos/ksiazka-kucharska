@@ -1,6 +1,7 @@
 package com.example.klaudia.myapplication;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -47,13 +48,14 @@ public class RecipeView extends AppCompatActivity {
 
     private String key = "recipe";
     protected Recipe myRecipe;
+    private View view;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_view);
-
+        view = (View) findViewById(R.id.main_content) ;
         JSONObject myJSON = null;
         String jsonReference = null;
 
@@ -70,6 +72,7 @@ public class RecipeView extends AppCompatActivity {
         toolbar.setTitle(myRecipe.getTitle());
 
         setSupportActionBar(toolbar);
+
         //toolbar.setTitle(getIntent().getStringExtra("title"));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -81,18 +84,6 @@ public class RecipeView extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-                //tutaj ma powstać metoda dodająca przepis do ulubionych
-
-            }
-        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -118,14 +109,21 @@ public class RecipeView extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home:{
                 finish();
+                return true;}
+            case R.id.favorite_item: //dodawanie do ulubionych!!!
+            {
+                Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
                 return true;
+            }
         }
 
+            return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 
 //    private String upperCase(String toUpperCase){ //duza literka
