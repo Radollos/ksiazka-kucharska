@@ -75,6 +75,13 @@ public class MainActivity extends AppCompatActivity
                 String tag = "";
                 switch (idChosen)
                 {
+                    case R.drawable.appetizer:
+                        searcher.tagsSearch_TitlesUrls("appetizer");
+                        tag = "Appetizer";
+                        break;
+                    case R.drawable.favorites:
+                        //tutaj przejście do ulubionych!
+                        break;
                     case R.drawable.breakfast:
                         searcher.tagsSearch_TitlesUrls("breakfast");
                         tag = "Breakfast";
