@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class MainActivity extends AppCompatActivity
+public class  MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
 {
     private GridView gridview;
