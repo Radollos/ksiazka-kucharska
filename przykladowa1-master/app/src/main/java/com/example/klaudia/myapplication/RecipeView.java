@@ -122,7 +122,7 @@ public class RecipeView extends AppCompatActivity {
             }
         }
 
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 
     }
 
