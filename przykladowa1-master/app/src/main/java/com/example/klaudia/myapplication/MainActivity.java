@@ -209,14 +209,16 @@ public class  MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            i = new Intent(this, MyFridge.class);
+            startActivity(i);
 
-        } else if (id == R.id.nav_slideshow)
-        {
+        } else if (id == R.id.nav_slideshow) {
             i = new Intent(this, ComplexSearch.class);
             startActivity(i);
 
         } else if (id == R.id.nav_manage) {
-
+            i = new Intent(this, Favourites.class);
+            startActivity(i);
         }
 
 

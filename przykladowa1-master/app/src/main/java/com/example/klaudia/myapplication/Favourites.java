@@ -1,65 +1,67 @@
 package com.example.klaudia.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Vector;
 
 public class Favourites extends AppCompatActivity {
 
-    private String[] favouritesTitles;
-
+    private Vector<String> favouritesTitles;
+    ListView favouritesTitlesList;
+    FavouritesListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        loadFavouritesTitles();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favourites);
+
+        loadFavouritesTitles();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        favouritesTitlesList = (ListView) findViewById(R.id.favourite_list);
+        adapter = new FavouritesListAdapter(this, favouritesTitles);
+        favouritesTitlesList.setAdapter(adapter);
     }
 
     private void loadFavouritesTitles(){
-        favouritesTitles = (getApplicationContext().fileList());
+        favouritesTitles = new Vector<String>();
+        String[] tmp = getApplicationContext().fileList();
+        for(int i=0; i<tmp.length; i++){
+            favouritesTitles.add(tmp[i]);
+        }
     }
 
     public void getFavourite(String title){
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(title + ".data"));
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(title));
             Recipe favourite = (Recipe)ois.readObject();
             ois.close();
+            Intent intent = new Intent(getApplicationContext(), RecipeView.class);
+            JSONObject recipeJSONObject = favourite.getJson();
+            intent.putExtra("recipe", recipeJSONObject.toString());
+            startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(this, "Error. Cannot load favourite recipe.", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
 
-
-    // TODO: przniesc metode do onClicku przycisku w widoku przepisu
-    public void addFavourite(Recipe recipe){
-
-        int i = 0;
-        String[] listOfFavourites = getApplicationContext().fileList();
-        while(i<listOfFavourites.length){
-            if(listOfFavourites[i] == recipe.getTitle()){
-                Toast.makeText(this, "Recipe already in favourites", Toast.LENGTH_LONG);
-                return;
-            }
-            i++;
-        }
-
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(recipe.getTitle() + ".data"));
-            oos.writeObject(recipe);
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(this, recipe.getTitle() + "  added to Favourites", Toast.LENGTH_SHORT).show();
+    public void deleteFavourite(String title){
+        deleteFile(title);
+        loadFavouritesTitles();
+        adapter.setFavouritesTitles(favouritesTitles);
+        Toast.makeText(this, title + " removed from Favourites", Toast.LENGTH_SHORT).show();
     }
+
 }
