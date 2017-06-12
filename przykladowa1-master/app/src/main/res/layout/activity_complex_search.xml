@@ -4,17 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.klaudia.myapplication.MainActivity">
+    tools:context="com.example.klaudia.myapplication.ComplexSearch">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <include layout="@layout/content_complex_search" />
-
+    </ScrollView>
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
+            android:title="Advanced search"
             android:id="@+id/toolbar_complex_search"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"

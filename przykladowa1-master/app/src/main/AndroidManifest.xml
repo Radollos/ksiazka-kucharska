@@ -34,7 +34,12 @@
             android:name=".RecipeView"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ComplexSearch" />
-        <activity android:name=".Favourites"></activity>
+        <activity
+            android:name=".MyFridge"
+            android:label="@string/title_activity_my_fridge"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Favourites"></activity>
     </application>
 
 </manifest>

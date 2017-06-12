@@ -29,10 +29,15 @@ public class ComplexSearch extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_complex_search);
+        setContentView(R.layout.activity_complex_search);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_complex_search);
+        toolbar.setTitle("Advanced search");
         setSupportActionBar(toolbar);
+
+      //  toolbar.setTitle("Advanced search");
+    //    toolbar.setLogo(R.drawable.ic_search_white_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -83,6 +88,7 @@ public class ComplexSearch extends AppCompatActivity
                     }
                     searcher.complexSearch_Titles(hashMapsearch);
                     Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
+                    intent.putExtra("tag", "Found: ");
                     startActivity(intent);
                 }
 
