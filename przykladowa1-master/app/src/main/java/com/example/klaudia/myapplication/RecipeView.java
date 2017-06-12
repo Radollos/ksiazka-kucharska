@@ -2,6 +2,7 @@ package com.example.klaudia.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -23,10 +24,15 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 public class RecipeView extends AppCompatActivity {
@@ -113,17 +119,40 @@ public class RecipeView extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:{
                 finish();
-                return true;}
-            case R.id.favorite_item: //dodawanie do ulubionych!!!
+                return true;
+            }
+            case R.id.favorite_item:
             {
-                Snackbar.make(view, "Soon you will have it in 'Favorites'", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+                int i = 0;
+                String[] listOfFavourites = getApplicationContext().fileList();
+                while(i<listOfFavourites.length){
+                    if(listOfFavourites[i].equals(myRecipe.getTitle())){
+                        Toast.makeText(this, "Recipe already in favourites", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                    i++;
+                }
+
+                File file = new File(getApplicationContext().getFilesDir(), myRecipe.getTitle());
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(myRecipe.getTitle()));
+                    oos.writeObject(myRecipe);
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(this, myRecipe.getTitle() + "  added to Favourites", Toast.LENGTH_SHORT).show();
+
                 return true;
             }
         }
-
         return super.onOptionsItemSelected(item);
-
     }
 
 //    private String upperCase(String toUpperCase){ //duza literka
