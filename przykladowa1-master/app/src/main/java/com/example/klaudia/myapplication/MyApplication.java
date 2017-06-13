@@ -27,6 +27,8 @@ public class MyApplication extends Application
     }
     public Searcher getSearcher()
     {
+        getPreferencesFromFile();
+        setPreferencesToSearcher();
         return searcher;
     }
 
@@ -35,7 +37,6 @@ public class MyApplication extends Application
     {
         try
         {
-            String[] tmp = getApplicationContext().fileList();
             ObjectInputStream ois = new ObjectInputStream(openFileInput("Preferences"));
             preferences = (HashMap<String, String>) ois.readObject();
             ois.close();
