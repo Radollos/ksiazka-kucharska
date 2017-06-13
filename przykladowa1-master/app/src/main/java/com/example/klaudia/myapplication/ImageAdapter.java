@@ -68,17 +68,18 @@ public class ImageAdapter extends BaseAdapter{
 
     // references to our images
     private static Integer[] mThumbIds = {
+            R.drawable.favorites,
             R.drawable.breakfast,
-            R.drawable.soup,
+            R.drawable.soups,
             R.drawable.meat,
             R.drawable.fish,
-            R.drawable.salad,
-            R.drawable.dessert,
+            R.drawable.appetizer,
+            R.drawable.salads,
+            R.drawable.desserts,
             R.drawable.drinks,
             R.drawable.flour_dishes,
             R.drawable.glutenfree,
             R.drawable.cakes,
-            R.drawable.cheap_dishes,
             R.drawable.mexican,
             R.drawable.thai,
             R.drawable.japanese,

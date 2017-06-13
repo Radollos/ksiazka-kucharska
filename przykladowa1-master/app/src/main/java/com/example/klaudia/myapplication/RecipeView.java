@@ -174,13 +174,13 @@ public class RecipeView extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    RecipeView1 tab1 = new RecipeView1();
+                    RecipeView3 tab1 = new RecipeView3();
                     return tab1;
                 case 1:
-                    RecipeView2 tab2 = new RecipeView2();
+                    RecipeView1 tab2 = new RecipeView1();
                     return tab2;
                 case 2:
-                    RecipeView3 tab3 = new RecipeView3();
+                    RecipeView2 tab3 = new RecipeView2();
                     return tab3;
                 default:
                     return null;
@@ -202,11 +202,12 @@ public class RecipeView extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                {return "Ingredients";}
+                {return "Description";}
                 case 1:
-                    return "Instruction";
+                    return "Ingredients";
                 case 2:
-                {return "Description";
+                {return "Instruction" +
+                        "";
 
                 }
             }
