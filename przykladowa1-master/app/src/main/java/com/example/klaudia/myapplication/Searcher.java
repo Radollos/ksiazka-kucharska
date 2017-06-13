@@ -1,27 +1,20 @@
 package com.example.klaudia.myapplication;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.media.Image;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+
 
 /**
  * Created by Klaudia on 2017-04-24.
@@ -31,7 +24,34 @@ public class Searcher
 {
     private JSONArray recipesJSONArray;
     private LinkedHashMap<String, String> titleUrl;
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private HashMap<String, String> preferences;
+
+
+    public void setPreferences(HashMap<String, String> preferences)
+    {
+        this.preferences = preferences;
+    }
+
+
+    public String changePreferencesToQuery()
+    {
+        String query = "";
+        Iterator it = preferences.entrySet().iterator();
+        while (it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry) it.next();
+            Object key = pair.getKey();
+            Object value = pair.getValue();
+            //Kropka sluzy do oddzielenia pary (klucz, wartosc)
+            query += key.toString() + "=" + value + ".";
+        }
+
+        if (query.length() > 0 && query.charAt(query.length()-1) == '.')
+            query = query.substring(0, query.length() - 1);
+
+        query = query.replace('.', '&');
+        return changeTextToRequest(query) ;
+    }
 
 
     public JSONObject getRecipeJSONObjectById(int id)
@@ -56,7 +76,7 @@ public class Searcher
 
     public void tagsSearch_TitlesUrls(String text)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changePreferencesToQuery() + "," + changeTextToRequest(text);
         recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
         getRecipesTitleUrlFromArray();
     }
@@ -64,7 +84,7 @@ public class Searcher
 
     public void ingredientsSearch_TitlesImages(String text)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changeTextToRequest(text) +  "&limitLicense=false&number=10";
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changePreferencesToQuery() + "," + changeTextToRequest(text) +  "&limitLicense=false&number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
         getRecipesTitleUrlFromArray();
     }
@@ -95,7 +115,7 @@ public class Searcher
             userInput = userInput.substring(0, userInput.length() - 1);
 
         userInput = userInput.replace('.', '&');
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changePreferencesToQuery() + "," + changeTextToRequest(userInput);
         recipesJSONArray = getJsonArrayFromRequest(request, "results");
         getRecipesTitleUrlFromArray();
     }
@@ -255,4 +275,5 @@ public class Searcher
         }
         return true;
     }
+
 }

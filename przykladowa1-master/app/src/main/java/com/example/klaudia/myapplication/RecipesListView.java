@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+
 import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,10 +22,11 @@ import java.util.Map;
 public class RecipesListView extends AppCompatActivity {
 
     ListView recipeList;
+    ProgressBar progress;
 
     String tag; //tu będzie przypisana kategoria
     String key = "tag"; //klucz dla kategorii wybranej w gridzie
-
+    String request = "";
     String[] titles;
     String[] urls;
 
@@ -31,13 +34,16 @@ public class RecipesListView extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_list_view);
+        progress = (ProgressBar) findViewById(R.id.progressBar2);
+        progress.setVisibility(View.VISIBLE);
+
         getList();
         setToolbar();
         setListView();
-
     }
 
     private void getList()
@@ -60,6 +66,9 @@ public class RecipesListView extends AppCompatActivity {
     private void setToolbar(){ //ustawiam toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar_list_view);
         tag = getIntent().getStringExtra(key);
+
+        request = getIntent().getStringExtra("request");
+
         toolbar.setTitle(tag + " recipes");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,10 +89,13 @@ public class RecipesListView extends AppCompatActivity {
     }
 
     private void setListView(){ //ustawiam widok listy, odpalam adapter
+
         recipeList = (ListView) findViewById(R.id.recipes_list_view);
-        //       CustomList adapter = new CustomList(this, titles, images);
         CustomList adapter = new CustomList(this, titles, urls);
         recipeList.setAdapter(adapter);
+
+ //       progress.setVisibility(View.INVISIBLE);
+
         recipeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {  //na razie wyświetlanie przepisu jako nowa aktywość do pracy nad widokiem, potem będziemy ogarniać fragmenty we fragmencie
