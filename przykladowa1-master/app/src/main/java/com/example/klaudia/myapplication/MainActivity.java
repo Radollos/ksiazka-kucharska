@@ -47,7 +47,6 @@ public class  MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searcher = ((MyApplication) this.getApplication()).getSearcher();
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle (
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,6 +70,7 @@ public class  MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id)
             {
+                Toast.makeText(getApplicationContext(), "Wait...", Toast.LENGTH_LONG).show();
                 int idChosen = ImageAdapter.getReferences(position);
                 String tag = "";
                 switch (idChosen)

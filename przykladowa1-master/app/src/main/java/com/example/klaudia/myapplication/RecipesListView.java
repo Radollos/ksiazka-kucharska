@@ -22,7 +22,6 @@ import java.util.Map;
 public class RecipesListView extends AppCompatActivity {
 
     ListView recipeList;
-    ProgressBar progress;
 
     String tag; //tu będzie przypisana kategoria
     String key = "tag"; //klucz dla kategorii wybranej w gridzie
@@ -38,8 +37,6 @@ public class RecipesListView extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes_list_view);
-        progress = (ProgressBar) findViewById(R.id.progressBar2);
-        progress.setVisibility(View.VISIBLE);
 
         getList();
         setToolbar();

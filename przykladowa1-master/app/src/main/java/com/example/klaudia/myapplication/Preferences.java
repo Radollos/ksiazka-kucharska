@@ -82,7 +82,6 @@ public class Preferences extends AppCompatActivity
                     oos.writeObject(hashMapPreferences);
                     oos.close();
                     searcher.setPreferences(hashMapPreferences);
-                    String[] tmp = getApplicationContext().fileList();
                     Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                 }
                 catch (IOException e)

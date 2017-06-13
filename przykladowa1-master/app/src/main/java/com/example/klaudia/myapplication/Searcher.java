@@ -36,21 +36,24 @@ public class Searcher
     public String changePreferencesToQuery()
     {
         String query = "";
-        Iterator it = preferences.entrySet().iterator();
-        while (it.hasNext())
+        if (preferences!=null)
         {
-            Map.Entry pair = (Map.Entry) it.next();
-            Object key = pair.getKey();
-            Object value = pair.getValue();
-            //Kropka sluzy do oddzielenia pary (klucz, wartosc)
-            query += key.toString() + "=" + value + ".";
+            Iterator it = preferences.entrySet().iterator();
+            while (it.hasNext())
+            {
+                Map.Entry pair = (Map.Entry) it.next();
+                Object key = pair.getKey();
+                Object value = pair.getValue();
+                //Kropka sluzy do oddzielenia pary (klucz, wartosc)
+                query += key.toString() + "=" + value + ".";
+            }
+
+            if (query.length() > 0 && query.charAt(query.length()-1) == '.')
+                query = query.substring(0, query.length() - 1);
+
+            query = query.replace('.', '&');
         }
-
-        if (query.length() > 0 && query.charAt(query.length()-1) == '.')
-            query = query.substring(0, query.length() - 1);
-
-        query = query.replace('.', '&');
-        return changeTextToRequest(query) ;
+        return query == "" ? "" : changeTextToRequest(query) ;
     }
 
 
