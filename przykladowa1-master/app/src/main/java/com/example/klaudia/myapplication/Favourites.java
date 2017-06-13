@@ -44,7 +44,7 @@ public class Favourites extends AppCompatActivity {
 
     public void getFavourite(String title){
         try {
-            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(title));
+            ObjectInputStream ois = new ObjectInputStream(openFileInput(title));
             Recipe favourite = (Recipe)ois.readObject();
             ois.close();
             Intent intent = new Intent(getApplicationContext(), RecipeView.class);
@@ -56,6 +56,7 @@ public class Favourites extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
     public void deleteFavourite(String title){
         deleteFile(title);

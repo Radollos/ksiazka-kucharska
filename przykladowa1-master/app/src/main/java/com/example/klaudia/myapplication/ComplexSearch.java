@@ -70,7 +70,7 @@ public class ComplexSearch extends AppCompatActivity
                 if (query.getText().toString().length() == 0)
                 {
                     query.requestFocus();
-                    query.setError("Tags is required!");
+                    query.setError("Tags are required!");
                 }
 
 

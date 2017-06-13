@@ -47,7 +47,6 @@ public class  MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searcher = ((MyApplication) this.getApplication()).getSearcher();
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle (
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -71,6 +70,7 @@ public class  MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id)
             {
+                Toast.makeText(getApplicationContext(), "Wait...", Toast.LENGTH_LONG).show();
                 int idChosen = ImageAdapter.getReferences(position);
                 String tag = "";
                 switch (idChosen)
@@ -206,17 +206,25 @@ public class  MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_preferences)
+        {
+            i = new Intent(this, Preferences.class);
+            startActivity(i);
+        }
+        else if (id == R.id.nav_gallery)
+        {
             i = new Intent(this, MyFridge.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_slideshow) {
+        }
+        else if (id == R.id.nav_slideshow)
+        {
             i = new Intent(this, ComplexSearch.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_manage) {
+        }
+        else if (id == R.id.nav_manage)
+        {
             i = new Intent(this, Favourites.class);
             startActivity(i);
         }
