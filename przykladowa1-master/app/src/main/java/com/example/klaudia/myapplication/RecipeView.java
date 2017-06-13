@@ -136,12 +136,12 @@ public class RecipeView extends AppCompatActivity {
 
                 File file = new File(getApplicationContext().getFilesDir(), myRecipe.getTitle());
                 try {
-                    file.createNewFile();
+                   file.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 try {
-                    ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(myRecipe.getTitle()));
+                    ObjectOutputStream oos = new ObjectOutputStream(openFileOutput(myRecipe.getTitle(), Context.MODE_PRIVATE));
                     oos.writeObject(myRecipe);
                     oos.close();
                 } catch (IOException e) {
