@@ -3,11 +3,13 @@ package com.example.klaudia.myapplication;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 
 /**
  * Created by Klaudia on 2017-04-24.
@@ -16,17 +18,10 @@ import org.json.JSONObject;
 //klasa sluzaca do laczenia sie z baza
 public class ConnectionManager extends AsyncTask<String, Void, HttpResponse<JsonNode>>
 {
-    JsonNode jsonResponse;
-    public ConnectionManager()
-    {
-        jsonResponse = null;
-    }
-
-
     @Override
     protected void onPreExecute()
     {
-
+        super.onPreExecute();
     }
 
     @Override
@@ -48,23 +43,11 @@ public class ConnectionManager extends AsyncTask<String, Void, HttpResponse<Json
         return response;
     }
 
-
+    @Override
     protected void onPostExecute(HttpResponse<JsonNode> response)
     {
-        try
-        {
-            jsonResponse = response.getBody();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
     }
-
-
-
-
-
 
 
 

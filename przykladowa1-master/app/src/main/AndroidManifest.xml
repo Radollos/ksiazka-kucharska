@@ -37,9 +37,9 @@
         <activity
             android:name=".MyFridge"
             android:label="@string/title_activity_my_fridge"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".Favourites"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Favourites" />
+        <activity android:name=".Preferences"></activity>
     </application>
 
 </manifest>
