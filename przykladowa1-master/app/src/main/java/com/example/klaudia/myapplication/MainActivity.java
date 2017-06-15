@@ -76,74 +76,72 @@ public class  MainActivity extends AppCompatActivity
                 switch (idChosen)
                 {
                     case R.drawable.breakfast:
-                        searcher.tagsSearch_TitlesUrls("breakfast");
+                        searcher.tagsSearch("breakfast");
                         tag = "Breakfast";
                         break;
                     case R.drawable.dessert:
                         tag = "Dessert";
-                        searcher.tagsSearch_TitlesUrls("dessert");
+                        searcher.tagsSearch("dessert");
                         break;
                     case R.drawable.fish:
                         tag = "Fish";
-                        searcher.tagsSearch_TitlesUrls("fish");
+                        searcher.tagsSearch("fish");
                         break;
                     case R.drawable.meat:
                         tag = "Meat";
-                        searcher.tagsSearch_TitlesUrls("meat");
+                        searcher.tagsSearch("meat");
                         break;
                     case R.drawable.soup:
                         tag = "Soup";
-                        searcher.tagsSearch_TitlesUrls("soup");
+                        searcher.tagsSearch("soup");
                         break;
                     case R.drawable.vege:
                         tag = "Vege";
-                        searcher.tagsSearch_TitlesUrls("vegetarian");
+                        searcher.tagsSearch("vegetarian");
                         break;
                     case R.drawable.cakes:
                         tag = "Cake";
-                        searcher.tagsSearch_TitlesUrls("cake");
+                        searcher.tagsSearch("cake");
                         break;
                     case R.drawable.drinks:
                         tag = "Drink";
-                        searcher.tagsSearch_TitlesUrls("drink");
+                        searcher.tagsSearch("drink");
                         break;
                     case R.drawable.flour_dishes:
                         tag = "Flour dishes";
-                        searcher.tagsSearch_TitlesUrls("flour");
+                        searcher.tagsSearch("flour");
                         break;
                     case R.drawable.glutenfree:
                         tag = "Gluten-free";
-                        searcher.tagsSearch_TitlesUrls("gluten free");
+                        searcher.tagsSearch("gluten free");
                         break;
                     case R.drawable.italian:
                         tag = "Italian";
-                        searcher.tagsSearch_TitlesUrls("italian");
+                        searcher.tagsSearch("italian");
                         break;
                     case R.drawable.japanese:
                         tag = "Japanese";
-                        searcher.tagsSearch_TitlesUrls("japanese");
+                        searcher.tagsSearch("japanese");
                         break;
                     case R.drawable.mexican:
                         tag = "Mexican";
-                        searcher.tagsSearch_TitlesUrls("mexican");
+                        searcher.tagsSearch("mexican");
                         break;
                     case R.drawable.salad:
                         tag = "Salad";
-                        searcher.tagsSearch_TitlesUrls("salad");
+                        searcher.tagsSearch("salad");
                         break;
                     case R.drawable.thai:
                         tag = "Thai";
-                        searcher.tagsSearch_TitlesUrls("thai");
+                        searcher.tagsSearch("thai");
                         break;
                     case R.drawable.vegan:
                         tag = "Vegan";
-                        searcher.tagsSearch_TitlesUrls("vegan");
+                        searcher.tagsSearch("vegan");
                         break;
-                    //              case R.drawable.polish:
-                    //                  searcher.tagsSearch_TitlesImages("polish"); //chyba brak polskiej kuchni ^^
                     case R.drawable.cheap_dishes:
                         tag = "Cheap meal";
-                        searcher.tagsSearch_TitlesUrls("cheap"); //trza jakoś inaczej skonstruować wyszukiwanie po taniości
+                        searcher.tagsSearch("cheap"); //trza jakoś inaczej skonstruować wyszukiwanie po taniości
                 }
                 Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
                 intent.putExtra("tag", tag);
@@ -247,7 +245,7 @@ public class  MainActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
         {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            searcher.tagsSearch_TitlesUrls(query);
+            searcher.tagsSearch(query);
             Intent intent2 = new Intent(getApplicationContext(), RecipesListView.class);
             startActivity(intent2);
         }
