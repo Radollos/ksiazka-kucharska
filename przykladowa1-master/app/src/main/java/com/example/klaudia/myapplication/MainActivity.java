@@ -86,7 +86,7 @@ public class  MainActivity extends AppCompatActivity
                         searcher.tagsSearch_TitlesUrls("breakfast");
                         tag = "Breakfast";
                         break;
-                    case R.drawable.dessert:
+                    case R.drawable.desserts:
                         tag = "Dessert";
                         searcher.tagsSearch_TitlesUrls("dessert");
                         break;
@@ -98,7 +98,7 @@ public class  MainActivity extends AppCompatActivity
                         tag = "Meat";
                         searcher.tagsSearch_TitlesUrls("meat");
                         break;
-                    case R.drawable.soup:
+                    case R.drawable.soups:
                         tag = "Soup";
                         searcher.tagsSearch_TitlesUrls("soup");
                         break;
@@ -134,7 +134,7 @@ public class  MainActivity extends AppCompatActivity
                         tag = "Mexican";
                         searcher.tagsSearch_TitlesUrls("mexican");
                         break;
-                    case R.drawable.salad:
+                    case R.drawable.salads:
                         tag = "Salad";
                         searcher.tagsSearch_TitlesUrls("salad");
                         break;
@@ -148,9 +148,6 @@ public class  MainActivity extends AppCompatActivity
                         break;
                     //              case R.drawable.polish:
                     //                  searcher.tagsSearch_TitlesImages("polish"); //chyba brak polskiej kuchni ^^
-                    case R.drawable.cheap_dishes:
-                        tag = "Cheap meal";
-                        searcher.tagsSearch_TitlesUrls("cheap"); //trza jakoś inaczej skonstruować wyszukiwanie po taniości
                 }
                 Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
                 intent.putExtra("tag", tag);
@@ -255,7 +252,9 @@ public class  MainActivity extends AppCompatActivity
         {
             String query = intent.getStringExtra(SearchManager.QUERY);
             searcher.tagsSearch_TitlesUrls(query);
+
             Intent intent2 = new Intent(getApplicationContext(), RecipesListView.class);
+            intent2.putExtra("tag", "Found: ");
             startActivity(intent2);
         }
     }
