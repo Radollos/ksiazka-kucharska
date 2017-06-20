@@ -77,6 +77,7 @@ public class ImageAdapter extends BaseAdapter{
             R.drawable.salads,
             R.drawable.desserts,
             R.drawable.drinks,
+            R.drawable.appetizer,
             R.drawable.flour_dishes,
             R.drawable.glutenfree,
             R.drawable.cakes,
