@@ -7,7 +7,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by Slawcio on 2017-06-20.
@@ -26,18 +31,24 @@ public class NoticeDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Build the dialog and set up the button click handlers
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-
+        final MyFridge myActivity = (MyFridge) getActivity();
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        builder.setView(inflater.inflate(R.layout.fridge_add_dialog, null));
+        View view = inflater.inflate(R.layout.fridge_add_dialog, null);
+        builder.setView(view);
+        final EditText editText = (EditText) view.findViewById(R.id.dialog_ingredient);
         builder.setMessage("Add ingredients to fridge")
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity
-                        mListener.onDialogPositiveClick(NoticeDialogFragment.this);
-
+                        myActivity.ingredientName = editText.getText().toString();
+                        if(!myActivity.ingredientName.equals(""))
+                        myActivity.addIngredient(myActivity.ingredientName, 0, "");
+                        else
+                            Toast.makeText(getContext(), "Please write an ingredient", Toast.LENGTH_SHORT).show();
+                        NoticeDialogFragment.this.getDialog().dismiss();
                     }
                 })
                 .setNegativeButton("Back", new DialogInterface.OnClickListener() {

@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.
     EditText newIngredientUnit;
     FridgeListAdapter adapter;
 
+    String ingredientName = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,18 +61,18 @@ public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.
             }
         });
 
-        newIngredientName = (EditText) findViewById(R.id.new_ingredient_name);
-        newIngredientAmount = (EditText) findViewById(R.id.new_ingredient_amount);
-        newIngredientUnit = (EditText) findViewById(R.id.new_ingredient_unit);
-
-        Button addIngredientButton = (Button) findViewById(R.id.new_ingredient_button);
-        addIngredientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addIngredient(newIngredientName.getText().toString(), Double.parseDouble(newIngredientAmount.getText().toString()), newIngredientUnit.getText().toString());
-                adapter.notifyDataSetChanged();
-            }
-        });
+//        newIngredientName = (EditText) findViewById(R.id.new_ingredient_name);
+//        newIngredientAmount = (EditText) findViewById(R.id.new_ingredient_amount);
+//        newIngredientUnit = (EditText) findViewById(R.id.new_ingredient_unit);
+//
+//        Button addIngredientButton = (Button) findViewById(R.id.new_ingredient_button);
+//        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addIngredient(newIngredientName.getText().toString(), Double.parseDouble(newIngredientAmount.getText().toString()), newIngredientUnit.getText().toString());
+//                adapter.notifyDataSetChanged();
+//            }
+//        });
 
         Button searchButton = (Button) findViewById(R.id.button);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +121,7 @@ public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.
         searcher.ingredientsSearch(request);
 
         Intent i = new Intent(getApplicationContext(), RecipesListView.class);
-        i.putExtra("tag", "MyFridge");
+        i.putExtra("tag", "My Fridge");
         startActivity(i);
     }
 
@@ -149,7 +151,6 @@ public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.
     // defined by the NoticeDialogFragment.NoticeDialogListener interface
     @Override
     public void onDialogPositiveClick(DialogFragment dialog) {
-        // User touched the dialog's positive button
 
     }
 
