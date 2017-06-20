@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,7 +21,7 @@ import org.json.JSONObject;
 import java.util.ListIterator;
 import java.util.Vector;
 
-public class MyFridge extends AppCompatActivity {
+public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.NoticeDialogListener {
 
     private Vector<FridgeIngredient> ingredients;
     ListView recipeList;
@@ -42,10 +44,20 @@ public class MyFridge extends AppCompatActivity {
         setContentView(R.layout.activity_my_fridge);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         recipeList = (ListView) findViewById(R.id.fridge_list);
         adapter = new FridgeListAdapter(this, ingredients);
         recipeList.setAdapter(adapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNoticeDialog();
+            }
+        });
 
         newIngredientName = (EditText) findViewById(R.id.new_ingredient_name);
         newIngredientAmount = (EditText) findViewById(R.id.new_ingredient_amount);
@@ -124,6 +136,29 @@ public class MyFridge extends AppCompatActivity {
 
     public Vector<FridgeIngredient> getIngredients(){return ingredients;}
 
+
+
+    public void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new NoticeDialogFragment();
+        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        // User touched the dialog's positive button
+
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // User touched the dialog's negative button
+
+    }
+
     class FridgeIngredient{
 
         protected String ingredientName;
@@ -135,5 +170,15 @@ public class MyFridge extends AppCompatActivity {
             this.amount = amount;
             this.unit = unit;
         }
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) { //powrót dla backbuttonu
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
