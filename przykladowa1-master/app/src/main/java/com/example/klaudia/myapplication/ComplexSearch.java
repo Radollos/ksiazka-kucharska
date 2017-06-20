@@ -169,7 +169,7 @@ public class ComplexSearch extends AppCompatActivity
                     int proMin = Integer.parseInt(proteins.getLeftPinValue());
                     int proMax = Integer.parseInt(proteins.getRightPinValue());
 
-                    searcher.complexSearch_Titles(hashMapsearch);
+                    searcher.complexSearch(hashMapsearch);
                     Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
                     intent.putExtra("tag", "Found: ");
                     startActivity(intent);

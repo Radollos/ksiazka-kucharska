@@ -1,7 +1,10 @@
 package com.example.klaudia.myapplication;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -25,7 +28,18 @@ public class Searcher
     private JSONArray recipesJSONArray;
     private LinkedHashMap<String, String> titleUrl;
     private HashMap<String, String> preferences;
+    public Context context;
+    public Activity activity;
 
+    public void setContext(Context context)
+    {
+        this.context = context;
+    }
+
+    public void setActivity(Activity activity)
+    {
+        this.activity = activity;
+    }
 
     public void setPreferences(HashMap<String, String> preferences)
     {
@@ -65,7 +79,7 @@ public class Searcher
 
         try
         {
-            response = new ConnectionManager().execute(request).get().getBody();
+            response = new ConnectionManager(activity).execute(request).get().getBody();
             result = response.getObject();
         }
         catch (Exception e)
@@ -77,31 +91,56 @@ public class Searcher
     }
 
 
-    public void tagsSearch_TitlesUrls(String text)
+    public void tagsSearch(String text)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changePreferencesToQuery() + "," + changeTextToRequest(text);
-        recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
+//        Toast.makeText(context, "Please wait...", Toast.LENGTH_LONG).show();
+        recipesJSONArray = null;
+        String request = "";
+        if (preferences == null || preferences.size() == 0)
+        {
+            request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
+            recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
+        }
+
+        else
+        {
+            request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&instructionsRequired=true&tags=" + changeTextToRequest(text) + "&" + changePreferencesToQuery();
+            recipesJSONArray = getJsonArrayFromRequest(request, "results");
+        }
         getRecipesTitleUrlFromArray();
     }
 
 
-    public void ingredientsSearch_TitlesImages(String text)
+    public void ingredientsSearch(String text)
     {
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients=" + changePreferencesToQuery() + "," + changeTextToRequest(text) +  "&limitLicense=false&number=10";
-        recipesJSONArray = getJsonArrayFromRequest(request, "");
+        recipesJSONArray = null;
+        String request = "";
+        if (preferences == null || preferences.size() == 0)
+        {
+            request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients="  + changeTextToRequest(text);
+            recipesJSONArray = getJsonArrayFromRequest(request, "");
+        }
+        else
+        {
+            request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&instructionsRequired=true&ingredients=" + changeTextToRequest(text) + "&" + changePreferencesToQuery();
+            recipesJSONArray = getJsonArrayFromRequest(request, "results");
+        }
         getRecipesTitleUrlFromArray();
     }
 
-    public void similarRecipesSearch_Titles(int id)
+    public void similarRecipesSearch(int id)
     {
+        recipesJSONArray = null;
         String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + id + "/similar?number=10";
         recipesJSONArray = getJsonArrayFromRequest(request, "");
         getRecipesTitleUrlFromArray();
     }
 
 
-    public void complexSearch_Titles(HashMap<String, String> nameValue)
+
+    public void complexSearch(HashMap<String, String> nameValue)
     {
+        recipesJSONArray = null;
         String userInput = "";
         Iterator it = nameValue.entrySet().iterator();
         while (it.hasNext())
@@ -116,9 +155,10 @@ public class Searcher
 
         if (userInput.length() > 0 && userInput.charAt(userInput.length()-1) == '.')
             userInput = userInput.substring(0, userInput.length() - 1);
-
+        
         userInput = userInput.replace('.', '&');
-        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changePreferencesToQuery() + "," + changeTextToRequest(userInput);
+        String request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?limitLicense=false&number=10&offset=10&ranking=1&" + changeTextToRequest(userInput);
+
         recipesJSONArray = getJsonArrayFromRequest(request, "results");
         getRecipesTitleUrlFromArray();
     }
@@ -130,7 +170,7 @@ public class Searcher
         JsonNode response = null;
         try
         {
-            response = new ConnectionManager().execute(request).get().getBody();
+            response = new ConnectionManager(activity).execute(request).get().getBody();
             //w bazie tablice z przepisami sa roznie zapisane - nazywaja sie "results" albo "recipes" albo nie maja nazwy. Po to jest zmienna jsonArrayName, ktora oznacza jak
             //zapisana jest tabela w JSONie. Inaczej wyciaga sie dane z tabeli, ktora ma nazwe i ktora jej nie ma
             if (jsonArrayName != "")
@@ -198,85 +238,6 @@ public class Searcher
     {
         String request = text.replace(' ', '+').replace(",", "%2C");
         return request;
-    }
-
-
-    //funkcja sprawdzajaca czy wszyskie wartosci wpisane do hashmapy maja poprawny format
-    public boolean checkMapCorrectness(HashMap<String, String> nameValue)
-    {
-        boolean correct = true;
-        for (Map.Entry pair : nameValue.entrySet())
-        {
-            if (!checkTypeCorrectness(pair.getKey().toString(), pair.getValue().toString()))
-            {
-                correct = false;
-                break;
-            }
-        }
-        return correct;
-    }
-
-
-    public boolean checkTypeCorrectness(String key, String value)
-    {
-        boolean correct = true;
-        char type = key.toString().charAt(0);
-        switch (type)
-        {
-            case 'b' :
-                correct = isBoolean(value);
-                break;
-
-            case 'i' :
-                correct = isInteger(value);
-                break;
-
-            case 'd' :
-                correct = isDouble(value);
-                break;
-
-            case 's':
-                correct = !(isBoolean(value) || isInteger(value) || isDouble(value));
-                break;
-
-            default:
-                break;
-        }
-        return correct;
-    }
-
-
-    public boolean isBoolean(String value)
-    {
-        return (value.equals("true") || value.equals("false"));
-    }
-
-
-    public boolean isInteger(String value)
-    {
-        try
-        {
-            int tmp = Integer.parseInt(value);
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-        return true;
-    }
-
-
-    public boolean isDouble(String value)
-    {
-        try
-        {
-            double tmp = Double.parseDouble(value);
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-        return true;
     }
 
 }
