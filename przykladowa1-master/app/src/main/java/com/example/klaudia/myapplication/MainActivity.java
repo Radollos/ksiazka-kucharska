@@ -1,6 +1,9 @@
 package com.example.klaudia.myapplication;
 import android.app.ActivityOptions;
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.text.Layout;
 import android.util.Log;
 
@@ -29,6 +32,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.logging.LogRecord;
 
 public class  MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -47,6 +51,9 @@ public class  MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         searcher = ((MyApplication) this.getApplication()).getSearcher();
+ //       searcher.setContext(getApplicationContext());
+ //       searcher.setActivity(this);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle (
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -70,87 +77,113 @@ public class  MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id)
             {
-                Toast.makeText(getApplicationContext(), "Wait...", Toast.LENGTH_LONG).show();
+                ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+                dialog.setMessage("Chwila!");
+                dialog.show();
+//                final Handler h = new Handler();
+//                Thread t = new Thread(new Runnable()
+//                {
+//                    @Override
+//                    public void run()
+//                    {
+//                        h.post(new Runnable()
+//                        {
+//                            @Override
+//                            public void run()
+//                            {
+//                                Toast.makeText(MainActivity.this, "Please wait...", Toast.LENGTH_LONG).show();
+//                            }
+//                        });
+//                    }
+//                });
+//                t.start();
+//                try {
+//                    t.join();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+
                 int idChosen = ImageAdapter.getReferences(position);
                 String tag = "";
                 switch (idChosen)
                 {
                     case R.drawable.appetizer:
-                        searcher.tagsSearch_TitlesUrls("appetizer");
+                        searcher.tagsSearch("appetizer");
                         tag = "Appetizer";
                         break;
                     case R.drawable.favorites:
                         //tutaj przejście do ulubionych!
                         break;
                     case R.drawable.breakfast:
-                        searcher.tagsSearch_TitlesUrls("breakfast");
+                        searcher.tagsSearch("breakfast");
                         tag = "Breakfast";
                         break;
                     case R.drawable.desserts:
                         tag = "Dessert";
-                        searcher.tagsSearch_TitlesUrls("dessert");
+                        searcher.tagsSearch("dessert");
                         break;
                     case R.drawable.fish:
                         tag = "Fish";
-                        searcher.tagsSearch_TitlesUrls("fish");
+                        searcher.tagsSearch("fish");
                         break;
                     case R.drawable.meat:
                         tag = "Meat";
-                        searcher.tagsSearch_TitlesUrls("meat");
+                        searcher.tagsSearch("meat");
                         break;
                     case R.drawable.soups:
                         tag = "Soup";
-                        searcher.tagsSearch_TitlesUrls("soup");
+                        searcher.tagsSearch("soup");
                         break;
                     case R.drawable.vege:
                         tag = "Vege";
-                        searcher.tagsSearch_TitlesUrls("vegetarian");
+                        searcher.tagsSearch("vegetarian");
                         break;
                     case R.drawable.cakes:
                         tag = "Cake";
-                        searcher.tagsSearch_TitlesUrls("cake");
+                        searcher.tagsSearch("cake");
                         break;
                     case R.drawable.drinks:
                         tag = "Drink";
-                        searcher.tagsSearch_TitlesUrls("drink");
+                        searcher.tagsSearch("drink");
                         break;
                     case R.drawable.flour_dishes:
                         tag = "Flour dishes";
-                        searcher.tagsSearch_TitlesUrls("flour");
+                        searcher.tagsSearch("flour");
                         break;
                     case R.drawable.glutenfree:
                         tag = "Gluten-free";
-                        searcher.tagsSearch_TitlesUrls("gluten free");
+                        searcher.tagsSearch("gluten free");
                         break;
                     case R.drawable.italian:
                         tag = "Italian";
-                        searcher.tagsSearch_TitlesUrls("italian");
+                        searcher.tagsSearch("italian");
                         break;
                     case R.drawable.japanese:
                         tag = "Japanese";
-                        searcher.tagsSearch_TitlesUrls("japanese");
+                        searcher.tagsSearch("japanese");
                         break;
                     case R.drawable.mexican:
                         tag = "Mexican";
-                        searcher.tagsSearch_TitlesUrls("mexican");
+                        searcher.tagsSearch("mexican");
                         break;
                     case R.drawable.salads:
                         tag = "Salad";
-                        searcher.tagsSearch_TitlesUrls("salad");
+                        searcher.tagsSearch("salad");
                         break;
                     case R.drawable.thai:
                         tag = "Thai";
-                        searcher.tagsSearch_TitlesUrls("thai");
+                        searcher.tagsSearch("thai");
                         break;
                     case R.drawable.vegan:
                         tag = "Vegan";
-                        searcher.tagsSearch_TitlesUrls("vegan");
+                        searcher.tagsSearch("vegan");
                         break;
                     //              case R.drawable.polish:
                     //                  searcher.tagsSearch_TitlesImages("polish"); //chyba brak polskiej kuchni ^^
                 }
                 Intent intent = new Intent(getApplicationContext(), RecipesListView.class);
                 intent.putExtra("tag", tag);
+                dialog.dismiss();
                 startActivity(intent);
             }
         });
@@ -251,7 +284,7 @@ public class  MainActivity extends AppCompatActivity
         if (Intent.ACTION_SEARCH.equals(intent.getAction()))
         {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            searcher.tagsSearch_TitlesUrls(query);
+            searcher.tagsSearch(query);
 
             Intent intent2 = new Intent(getApplicationContext(), RecipesListView.class);
             intent2.putExtra("tag", "Found: ");
@@ -265,4 +298,25 @@ public class  MainActivity extends AppCompatActivity
 
         startActivity(intent);
     }
+
+//
+//
+//
+//
+//   private class ToastTask extends AsyncTask<Void, Void, Integer>
+//   {
+//
+//        @Override
+//        protected void onPreExecute()
+//        {
+//            Toast.makeText(MainActivity.this, "grrr", Toast.LENGTH_LONG).show();
+//        }
+//
+//        @Override
+//        protected Integer doInBackground(Void ... params)
+//        {
+//            return 5;
+//        }
+//
+//    }
 }

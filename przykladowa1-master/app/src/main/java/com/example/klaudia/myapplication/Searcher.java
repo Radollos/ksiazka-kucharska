@@ -96,7 +96,7 @@ public class Searcher
 //        Toast.makeText(context, "Please wait...", Toast.LENGTH_LONG).show();
         recipesJSONArray = null;
         String request = "";
-        if (preferences == null)
+        if (preferences == null || preferences.size() == 0)
         {
             request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/random?limitLicense=false&number=10&tags=" + changeTextToRequest(text);
             recipesJSONArray = getJsonArrayFromRequest(request, "recipes");
@@ -115,7 +115,7 @@ public class Searcher
     {
         recipesJSONArray = null;
         String request = "";
-        if (preferences == null)
+        if (preferences == null || preferences.size() == 0)
         {
             request = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=false&ingredients="  + changeTextToRequest(text);
             recipesJSONArray = getJsonArrayFromRequest(request, "");
