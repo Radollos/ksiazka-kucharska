@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,23 +62,22 @@ public class RecipeView2 extends Fragment {
         myList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                TextView textView = (TextView) view.findViewById(R.id.txt);
-//                float size = textView.getTextSize();
+                TextView textView = (TextView) view.findViewById(R.id.txt);
+                float size = textView.getTextSize();
 //                float toSize = 45;
 //                float toSize2 = 55;
-//                if(textView.getTextSize() == 45){
-//                    textView.setTextSize(toSize2);
-//                } else {
-//                    textView.setTextSize(toSize);
-//                }
+
+                if(textView.getTextSize() == 54){
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                } else {
+                    textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                }
                 return true;
             }
         });
-        //     myList.setAdapter(listViewAdapter);
 
-        //     = inflater.inflate(R.layout.fragment_recipe_view, container, false);
-        //    TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        //    textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+
         return rootView;
     }
 

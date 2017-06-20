@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     tools:context="com.example.klaudia.myapplication.RecipeView">
 
     <ListView
         android:id="@+id/instruction_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="?android:attr/actionBarSize"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
