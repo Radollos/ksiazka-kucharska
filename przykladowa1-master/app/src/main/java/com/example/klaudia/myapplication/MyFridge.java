@@ -116,7 +116,7 @@ public class MyFridge extends AppCompatActivity implements NoticeDialogFragment.
         while(it.hasNext())
             request+=(", " + it.next().ingredientName);
         Searcher searcher = ((MyApplication) this.getApplication()).getSearcher();
-        searcher.ingredientsSearch_TitlesImages(request);
+        searcher.ingredientsSearch(request);
 
         Intent i = new Intent(getApplicationContext(), RecipesListView.class);
         i.putExtra("tag", "MyFridge");
