@@ -47,8 +47,8 @@ public class NoticeDialogFragment extends DialogFragment {
                         if(!myActivity.ingredientName.equals(""))
                         myActivity.addIngredient(myActivity.ingredientName, 0, "");
                         else
-                            Toast.makeText(getContext(), "Please write an ingredient", Toast.LENGTH_SHORT);
-                        dialog.dismiss();
+                            Toast.makeText(getContext(), "Please write an ingredient", Toast.LENGTH_SHORT).show();
+                        NoticeDialogFragment.this.getDialog().dismiss();
                     }
                 })
                 .setNegativeButton("Back", new DialogInterface.OnClickListener() {
