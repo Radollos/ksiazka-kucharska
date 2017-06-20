@@ -114,7 +114,7 @@
             android:layout_columnSpan="4"
             android:layout_gravity="right|clip_horizontal"
             android:layout_marginTop="10px"
-            android:hint="e.g main course, side dish, dessert"
+            android:hint="e.g main course, side dish"
             android:inputType="textAutoCorrect|textAutoComplete"
             android:paddingTop="30px"
             android:textSize="14sp" />
